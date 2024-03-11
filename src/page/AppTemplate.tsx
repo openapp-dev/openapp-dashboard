@@ -9,7 +9,7 @@ interface State {
   error: string | null;
 }
 
-export default function AppTemplate() {
+export default function AppTemplateStore() {
   const [state, setState] = useState<State>({
     appTemplates: [],
     loading: true,
