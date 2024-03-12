@@ -16,4 +16,9 @@ interface DerivedResource {
   name: string;
 }
 
-export type { Response, Request, DerivedResource };
+enum ExposeType {
+  Layer4 = "Layer4",
+  Layer7 = "Layer7",
+}
+
+export type { Response, Request, DerivedResource, ExposeType };

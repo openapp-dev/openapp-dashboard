@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router";
 import Layout from "./page/Layout";
 import AppTemplateStore from "./page/AppTemplate";
 import AppTemplateDetail from "./page/AppTemplateDetail";
+import PublicServiceTmeplate from "./page/PublicServiceTemplate";
 
 export default function App() {
   return (
@@ -10,10 +11,7 @@ export default function App() {
         <Route index element={<div>Index</div>} />
         <Route path="/store/app" element={<AppTemplateStore />} />
         <Route path="/store/app/detail" element={<AppTemplateDetail />} />
-        <Route
-          path="/store/public-service"
-          element={<div>Public Service</div>}
-        />
+        <Route path="/store/publicservice" element={<PublicServiceTmeplate />} />
       </Route>
     </Routes>
   );

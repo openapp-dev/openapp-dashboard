@@ -5,24 +5,24 @@ import {
 import { TypeMeta } from "@kubernetes-models/base";
 import { ExposeType } from "./common";
 
-interface AppTemplate extends TypeMeta {
+interface PublicServiceTemplate extends TypeMeta {
   metadata?: ObjectMeta;
-  spec: AppTemplateSpec;
+  spec: PublicServiceTemplateSpec;
 }
 
-interface AppTemplateSpec {
+interface PublicServiceTemplateSpec {
   title: string;
   description: string;
   author: string;
   icon: string;
   url: string;
   inputs: string;
-  exposeType: ExposeType;
+  exposeTypes: ExposeType[];
 }
 
-interface AppTemplateList extends TypeMeta {
+interface PublicServiceTemplateList extends TypeMeta {
   metadata?: ListMeta;
-  items: AppTemplate[];
+  items: PublicServiceTemplate[];
 }
 
-export type { AppTemplate, AppTemplateList, AppTemplateSpec };
+export type { PublicServiceTemplate, PublicServiceTemplateList, PublicServiceTemplateSpec };
