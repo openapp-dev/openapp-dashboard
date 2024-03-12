@@ -11,7 +11,9 @@ export default function AppTemplateCard({ appTemplate }: AppTemplateCardProps) {
 
   function handleCardClick() {
     // TODO: navigate to app detail page
-    navigate("/store/app/detail");
+    navigate("/store/app/detail", {
+      state: {template: appTemplate}
+    });
   }
 
   return (
