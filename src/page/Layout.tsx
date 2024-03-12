@@ -37,7 +37,7 @@ function OpenAppMenu() {
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <Link to="/store/public-service">
+        <Link to="/store/publicservice">
           <MdAutoAwesomeMotion className="w-6 h-6" />
           Public Service Store
         </Link>
