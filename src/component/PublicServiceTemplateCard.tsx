@@ -11,7 +11,9 @@ export default function PublicServiceTemplateCard({ publicServiceTemplate }: Pub
 
   function handleCardClick() {
     // TODO: navigate to publicservice template detail page
-    navigate("/store/publicservice/detail");
+    navigate("/store/publicservice/detail", {
+        state: {template: publicServiceTemplate}
+    });
   }
 
   return (
@@ -22,7 +24,7 @@ export default function PublicServiceTemplateCard({ publicServiceTemplate }: Pub
       <div className="flex">
         <div className="w-12 h-12 border border-gray-300 rounded-md flex items-center justify-center">
         {publicServiceTemplate.spec.icon === "" ? (
-            <span className="text-lg font-bold">{publicServiceTemplate.spec.title[0].toUpperCase()}</span>
+            <span className="text-lg font-bold" style={{ fontSize: "1.5rem" }}>{publicServiceTemplate.spec.title[0].toUpperCase()}</span>
         ) : (
             <img
             src={publicServiceTemplate.spec.icon}

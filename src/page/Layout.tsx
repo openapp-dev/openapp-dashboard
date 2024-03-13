@@ -16,10 +16,10 @@ function OpenAppMenu() {
     <Menu>
       <Menu.Title>Home</Menu.Title>
       <Menu.Item>
-        <a>
-          <MdApps className="w-6 h-6" />
+        <Link to="/instance/app">
+          <MdAutoAwesomeMotion className="w-6 h-6" />
           APP
-        </a>
+        </Link>
       </Menu.Item>
       <Menu.Item>
         <a>
