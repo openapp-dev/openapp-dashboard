@@ -1,13 +1,13 @@
 import { Button, Divider, Input } from "react-daisyui";
 import { Link } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
-import { AppTemplate } from "../types/apptemplate";
+import { PublicServiceTemplate } from "../types/publicservicetemplate";
 import { renderFormField } from "../util/helper";
 import YAML from 'yaml';
 
-export default function AppTemplateDetail() {
+export default function PublicServiceTemplateDetail() {
   const location = useLocation();
-  const template: AppTemplate = location.state.template;
+  const template: PublicServiceTemplate = location.state.template;
   if (!template) {
     return <div>Template not found</div>;
   }
@@ -24,9 +24,10 @@ export default function AppTemplateDetail() {
       <Divider />
       <div className="flex flex-col p-4 space-y-4">
         <div className="flex md:space-x-4 md:flex-row flex-col space-y-2">
-          <div className="flex-none w-24 h-24 rounded-md p-2 border border-gray-300">
+          <div className="flex-none w-24 h-24 rounded-md p-2 border border-gray-300 flex items-center justify-center">
             {template.spec.icon === "" ? (
-              <span className="text-lg font-bold">{template.spec.title[0].toUpperCase()}</span>
+                // Set size
+              <span className="text-lg font-bold" style={{ fontSize: "3rem" }}>{template.spec.title[0].toUpperCase()}</span>
             ) : (
                 <img
                 src={template.spec.icon}
@@ -41,7 +42,7 @@ export default function AppTemplateDetail() {
           </div>
           <div className="flex-none">
             <Button className="w-full" color="primary">
-              Install App
+              Install Public Service
             </Button>
           </div>
         </div>
@@ -53,14 +54,7 @@ export default function AppTemplateDetail() {
               <label className="sm:min-w-64">Instance Name</label>
               <Input
                 className="sm:w-96 w-full"
-                placeholder="APP instance name"
-              />
-            </div>
-            <div className="flex items-center flex-col sm:flex-row sm:space-x-4 space-y-2">
-              <label className="sm:min-w-64">Public Service</label>
-              <Input
-                className="sm:w-96 w-full"
-                placeholder="Public service used to publish the service"
+                placeholder="Public service instance name"
               />
             </div>
 
