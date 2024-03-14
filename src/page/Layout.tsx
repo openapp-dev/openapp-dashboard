@@ -45,10 +45,10 @@ function OpenAppMenu() {
       <Divider />
       <Menu.Title>Setting</Menu.Title>
       <Menu.Item>
-        <a>
-          <MdSettings className="w-6 h-6" />
-          Admin Setting
-        </a>
+        <Link to="/setting">
+          <MdAutoAwesomeMosaic className="w-6 h-6" />
+          OpenAPP Setting
+        </Link>
       </Menu.Item>
     </Menu>
   );

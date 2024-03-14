@@ -5,6 +5,7 @@ import AppTemplateDetail from "./page/AppTemplateDetail";
 import PublicServiceTmeplate from "./page/PublicServiceTemplate";
 import PublicServiceTemplateDetail from "./page/PublicServiceTemplateDetail";
 import AppInstancePage from "./page/AppInstance";
+import SettingPage from "./page/Setting";
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/store/app/detail" element={<AppTemplateDetail />} />
         <Route path="/store/publicservice" element={<PublicServiceTmeplate />} />
         <Route path="/store/publicservice/detail" element={<PublicServiceTemplateDetail />} />
+        <Route path="/setting" element={<SettingPage />} />
       </Route>
     </Routes>
   );

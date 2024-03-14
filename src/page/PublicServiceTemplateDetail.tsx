@@ -16,7 +16,7 @@ export default function PublicServiceTemplateDetail() {
     <div className="flex flex-col">
       <div className="flex space-x-1">
         <span className="text-gray-500">
-          <Link to="/store/app">APP Store</Link>
+          <Link to="/store/app">Public Service Store</Link>
         </span>
         <span>/</span>
         <span className="font-bold">{template.metadata?.name}</span>
