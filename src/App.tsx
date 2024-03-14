@@ -7,6 +7,7 @@ import PublicServiceTemplateDetail from "./page/PublicServiceTemplateDetail";
 import AppInstancePage from "./page/AppInstance";
 import SettingPage from "./page/Setting";
 import PublicServiceInstancePage from "./page/PublicServiceInstance";
+import AppInstanceDetail from "./page/AppInstanceDetail";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<AppTemplateStore />} />
         <Route path="/instance/app" element={<AppInstancePage />} />
+        <Route path="/instance/app/detail" element={<AppInstanceDetail />} />
         <Route path="/instance/publicservice" element={<PublicServiceInstancePage />} />
         <Route path="/store/app" element={<AppTemplateStore />} />
         <Route path="/store/app/detail" element={<AppTemplateDetail />} />
