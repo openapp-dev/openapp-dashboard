@@ -22,10 +22,10 @@ function OpenAppMenu() {
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <a>
-          <MdCloud className="w-6 h-6" />
+        <Link to="/instance/publicservice">
+          <MdAutoAwesomeMotion className="w-6 h-6" />
           Public Service
-        </a>
+        </Link>
       </Menu.Item>
 
       <Divider />

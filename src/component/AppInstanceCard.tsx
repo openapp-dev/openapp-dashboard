@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { MdShare } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { AppInstance } from "../types/appinstance";
 import { AppTemplate } from "../types/apptemplate";
