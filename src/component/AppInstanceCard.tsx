@@ -15,12 +15,6 @@ interface State {
 }
 
 export default function AppInstanceCard({ appInstance }: AppInstanceCardProps) {
-  const navigate = useNavigate();
-
-  function handleCardClick() {
-    // TODO: navigate to app detail page
-    navigate("/instance/app/detail");
-  }
 
 
   const [state, setState] = useState<State>({
@@ -45,6 +39,16 @@ export default function AppInstanceCard({ appInstance }: AppInstanceCardProps) {
   useEffect(() => {
     // TODO: send notification
   }, [state.error]);
+
+
+  const navigate = useNavigate();
+
+  function handleCardClick() {
+    // TODO: navigate to app detail page
+    navigate("/instance/app/detail", {
+      state: {template: state.appTemplate, instance: appInstance}
+    });
+  }
 
   return (
     <div
