@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { AppInstance } from "../types/appinstance";
 import { AppTemplate } from "../types/apptemplate";
 import { useLocation } from "react-router-dom";
-import { Button, Divider, Input } from "react-daisyui";
+import { Button, Divider } from "react-daisyui";
 
 export default function AppInstanceDetail() {
   const location = useLocation();
