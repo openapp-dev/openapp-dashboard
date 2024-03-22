@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import AppTemplateCard from "../component/AppTemplateCard";
-import { appTemplate } from "../api/apptemplate";
-import { AppTemplate } from "../types/apptemplate";
+import { appTemplate } from "../api";
+import { AppTemplate } from "../types";
+import TemplateCard from "../component/TemplateCard";
+import { useNavigate } from "react-router-dom";
 
 interface State {
   appTemplates: AppTemplate[];
@@ -33,10 +34,23 @@ export default function AppTemplateStore() {
     // TODO: send notification
   }, [state.error]);
 
+  const navigate = useNavigate();
+  function handleCardClick(appTemplate: AppTemplate) {
+    navigate("/store/app/detail", {
+      state: { template: appTemplate },
+    });
+  }
+
   return (
     <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
       {state.appTemplates.map((appTemplate, idx) => (
-        <AppTemplateCard key={idx} appTemplate={appTemplate} />
+        <TemplateCard
+          key={idx}
+          handleCardClick={() => {
+            handleCardClick(appTemplate);
+          }}
+          {...appTemplate.spec}
+        />
       ))}
     </div>
   );

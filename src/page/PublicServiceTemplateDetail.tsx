@@ -1,9 +1,10 @@
 import { Button, Divider, Input } from "react-daisyui";
 import { Link } from "react-router-dom";
-import { useLocation } from 'react-router-dom';
-import { PublicServiceTemplate } from "../types/publicservicetemplate";
+import { useLocation } from "react-router-dom";
+import { PublicServiceTemplate, Inputs } from "../types";
 import { renderFormField } from "../util/helper";
-import YAML from 'yaml';
+import { parseYaml } from "../util";
+import Panel from "../component/Panel";
 
 export default function PublicServiceTemplateDetail() {
   const location = useLocation();
@@ -11,7 +12,7 @@ export default function PublicServiceTemplateDetail() {
   if (!template) {
     return <div>Template not found</div>;
   }
-  const inputs = YAML.parse(template.spec.inputs);
+  const inputs = parseYaml<Inputs>(template.spec.inputs);
   return (
     <div className="flex flex-col">
       <div className="flex space-x-1">
@@ -26,14 +27,16 @@ export default function PublicServiceTemplateDetail() {
         <div className="flex md:space-x-4 md:flex-row flex-col space-y-2">
           <div className="flex-none w-24 h-24 rounded-md p-2 border border-gray-300 flex items-center justify-center">
             {template.spec.icon === "" ? (
-                // Set size
-              <span className="text-lg font-bold" style={{ fontSize: "3rem" }}>{template.spec.title[0].toUpperCase()}</span>
+              // Set size
+              <span className="text-lg font-bold" style={{ fontSize: "3rem" }}>
+                {template.spec.title[0].toUpperCase()}
+              </span>
             ) : (
-                <img
+              <img
                 src={template.spec.icon}
                 alt={template.spec.title}
                 className="w-full h-full"
-                />
+              />
             )}
           </div>
           <div className="flex-1 flex-col space-y-4">
@@ -62,9 +65,7 @@ export default function PublicServiceTemplateDetail() {
             {Object.entries(inputs).map(renderFormField)}
           </div>
         </div>
-        <div className="flex flex-col border border-gray-300">
-          <div className="bg-base-300 px-4 py-2">README.md</div>
-        </div>
+        <Panel title="README.md" />
       </div>
     </div>
   );

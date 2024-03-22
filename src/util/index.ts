@@ -1,3 +1,4 @@
 import { requests } from "./fetch";
+import { parseYaml } from "./ymal";
 
-export { requests };
+export { requests, parseYaml };

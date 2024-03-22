@@ -3,9 +3,11 @@ import { AppInstance } from "../types/appinstance";
 import { AppTemplate } from "../types/apptemplate";
 import { useLocation } from "react-router-dom";
 import { Button, Divider } from "react-daisyui";
+import Panel from "../component/Panel";
 
 export default function AppInstanceDetail() {
   const location = useLocation();
+
   const instance: AppInstance = location.state.instance;
   const template: AppTemplate = location.state.template;
 
@@ -23,13 +25,15 @@ export default function AppInstanceDetail() {
         <div className="flex md:space-x-4 md:flex-row flex-col space-y-2">
           <div className="flex-none w-24 h-24 rounded-md p-2 border border-gray-300">
             {template.spec.icon === "" ? (
-              <span className="text-lg font-bold">{template.spec.title[0].toUpperCase()}</span>
+              <span className="text-lg font-bold">
+                {template.spec.title[0].toUpperCase()}
+              </span>
             ) : (
-                <img
+              <img
                 src={template.spec.icon}
                 alt={template.spec.title}
                 className="w-full h-full"
-                />
+              />
             )}
           </div>
           <div className="flex-1 flex-col space-y-1">
@@ -43,8 +47,7 @@ export default function AppInstanceDetail() {
             </Button>
           </div>
         </div>
-        <div className="flex flex-col border border-gray-300">
-          <div className="bg-base-300 px-4 py-2">APP Status</div>
+        <Panel title="APP Status">
           <div className="flex flex-col p-2 space-y-2">
             <div className="flex items-center flex-col sm:flex-row sm:space-x-4 space-y-2">
               <label className="sm:min-w-64">Ready</label>
@@ -59,10 +62,8 @@ export default function AppInstanceDetail() {
               <span>{instance.status.externalServiceURL}</span>
             </div>
           </div>
-        </div>
-        <div className="flex flex-col border border-gray-300">
-          <div className="bg-base-300 px-4 py-2">APP log</div>
-        </div>
+        </Panel>
+        <Panel title="Logs"></Panel>
       </div>
     </div>
   );

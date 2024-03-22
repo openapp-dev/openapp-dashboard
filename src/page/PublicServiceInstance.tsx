@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import PublicServiceInstanceCard from "../component/PublicServiceInstanceCard";
 import { publicServiceInstance } from "../api/publicserviceinstance";
 import { PublicServiceInstance } from "../types/publicserviceinstance";
+import InstanceCard from "../component/InstanceCard";
 
 interface State {
   publicServiceInstances: PublicServiceInstance[];
@@ -24,7 +24,11 @@ export default function PublicServiceInstancePage() {
         setState({ ...state, loading: false, error: message });
         return;
       }
-      setState({ publicServiceInstances: data ?? [], loading: false, error: null });
+      setState({
+        publicServiceInstances: data ?? [],
+        loading: false,
+        error: null,
+      });
     }
     fetchData();
   }, []);
@@ -34,9 +38,9 @@ export default function PublicServiceInstancePage() {
   }, [state.error]);
 
   return (
-    <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
+    <div className="grid xl:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-4">
       {state.publicServiceInstances.map((publicServiceInstance, idx) => (
-        <PublicServiceInstanceCard key={idx} publicServiceInstance={publicServiceInstance} />
+        <InstanceCard key={idx} title="" icon="" />
       ))}
     </div>
   );

@@ -19,13 +19,13 @@ function OpenAppMenu() {
       <Menu.Title>Home</Menu.Title>
       <Menu.Item>
         <Link to="/instance/app">
-          <MdAutoAwesomeMotion className="w-6 h-6" />
+          <MdApps className="w-6 h-6" />
           APP
         </Link>
       </Menu.Item>
       <Menu.Item>
         <Link to="/instance/publicservice">
-          <MdAutoAwesomeMotion className="w-6 h-6" />
+          <MdCloud className="w-6 h-6" />
           Public Service
         </Link>
       </Menu.Item>
@@ -48,7 +48,7 @@ function OpenAppMenu() {
       <Menu.Title>Setting</Menu.Title>
       <Menu.Item>
         <Link to="/setting">
-          <MdAutoAwesomeMosaic className="w-6 h-6" />
+          <MdSettings className="w-6 h-6" />
           OpenAPP Setting
         </Link>
       </Menu.Item>

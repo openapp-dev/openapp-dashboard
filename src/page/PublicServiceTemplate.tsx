@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import PublicServiceTemplateCard from "../component/PublicServiceTemplateCard";
 import { publicServiceTemplate } from "../api/publicservicetemplate";
-import { PublicServiceTemplate } from "../types/publicservicetemplate";
+import { PublicServiceTemplate } from "../types";
+import TemplateCard from "../component/TemplateCard";
+import { useNavigate } from "react-router-dom";
 
 interface State {
   publicServiceTemplates: PublicServiceTemplate[];
@@ -24,7 +25,11 @@ export default function PublicServiceTemplateStore() {
         setState({ ...state, loading: false, error: message });
         return;
       }
-      setState({ publicServiceTemplates: data ?? [], loading: false, error: null });
+      setState({
+        publicServiceTemplates: data ?? [],
+        loading: false,
+        error: null,
+      });
     }
     fetchData();
   }, []);
@@ -33,10 +38,23 @@ export default function PublicServiceTemplateStore() {
     // TODO: send notification
   }, [state.error]);
 
+  const navigate = useNavigate();
+  function handleCardClick(publicServiceTemplate: PublicServiceTemplate) {
+    navigate("/store/publicservice/detail", {
+      state: { template: publicServiceTemplate },
+    });
+  }
+
   return (
     <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
       {state.publicServiceTemplates.map((publicServiceTemplate, idx) => (
-        <PublicServiceTemplateCard key={idx} publicServiceTemplate={publicServiceTemplate} />
+        <TemplateCard
+          key={idx}
+          {...publicServiceTemplate.spec}
+          handleCardClick={() => {
+            handleCardClick(publicServiceTemplate);
+          }}
+        />
       ))}
     </div>
   );
