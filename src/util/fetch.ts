@@ -1,4 +1,4 @@
-import { Response, Request } from "../types/common";
+import { Response, Request } from "../types";
 
 async function request<T, R>(request: Request<T>): Promise<Response<R>> {
   const response = await fetch(request.path, {

@@ -25,4 +25,8 @@ interface PublicServiceTemplateList extends TypeMeta {
   items: PublicServiceTemplate[];
 }
 
-export type { PublicServiceTemplate, PublicServiceTemplateList, PublicServiceTemplateSpec };
+export type {
+  PublicServiceTemplate,
+  PublicServiceTemplateList,
+  PublicServiceTemplateSpec,
+};

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import AppInstanceCard from "../component/AppInstanceCard";
-import { appInstance } from "../api/appinstance";
-import { AppInstance } from "../types/appinstance";
+import { appInstance, appTemplate } from "../api";
+import { AppInstance, AppTemplate } from "../types";
+import InstanceCard from "../component/InstanceCard";
 
 interface State {
   appInstances: AppInstance[];
+  appTemplates: { [key: string]: AppTemplate };
   loading: boolean;
   error: string | null;
 }
@@ -12,6 +13,7 @@ interface State {
 export default function AppInstancePage() {
   const [state, setState] = useState<State>({
     appInstances: [],
+    appTemplates: {},
     loading: true,
     error: null,
   });
@@ -24,7 +26,22 @@ export default function AppInstancePage() {
         setState({ ...state, loading: false, error: message });
         return;
       }
-      setState({ appInstances: data ?? [], loading: false, error: null });
+      const appTemplates = await appTemplate.listAllAppTemplates();
+      if (!appTemplates.success) {
+        setState({ ...state, loading: false, error: appTemplates.message });
+        return;
+      }
+      const appTemplateMap: { [key: string]: AppTemplate } = {};
+      appTemplates.data?.forEach((appTemplate) => {
+        appTemplateMap[appTemplate.spec.title] = appTemplate;
+      });
+
+      setState({
+        appInstances: data ?? [],
+        loading: false,
+        error: null,
+        appTemplates: appTemplateMap,
+      });
     }
     fetchData();
   }, []);
@@ -34,9 +51,13 @@ export default function AppInstancePage() {
   }, [state.error]);
 
   return (
-    <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
+    <div className="grid xl:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-4">
       {state.appInstances.map((appInstance, idx) => (
-        <AppInstanceCard key={idx} appInstance={appInstance} />
+        <InstanceCard
+          key={idx}
+          title={state.appTemplates[appInstance.spec.appTemplate].spec.title}
+          icon={state.appTemplates[appInstance.spec.appTemplate].spec.icon}
+        />
       ))}
     </div>
   );

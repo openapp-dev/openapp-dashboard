@@ -2,7 +2,7 @@ import { Divider, Input, Textarea } from "react-daisyui";
 import { useEffect, useState } from "react";
 import { setting } from "../api/setting";
 import { OpenAPPConfig } from "../types/config";
-import logo from '../resource/logo.png';
+import logo from "/logo.png";
 
 interface State {
   openappConfig?: OpenAPPConfig;
@@ -18,13 +18,16 @@ export default function SettingPage() {
 
   useEffect(() => {
     async function fetchData() {
-      const { success, message, data } =
-        await setting.getSetting();
+      const { success, message, data } = await setting.getSetting();
       if (!success) {
         setState({ ...state, loading: false, error: message });
         return;
       }
-      setState({ openappConfig: data ?? undefined, loading: false, error: null });
+      setState({
+        openappConfig: data ?? undefined,
+        loading: false,
+        error: null,
+      });
     }
     fetchData();
   }, []);
@@ -43,9 +46,9 @@ export default function SettingPage() {
       <Divider />
       <div className="flex flex-col p-4 space-y-4">
         <div className="flex md:space-x-4 md:flex-row flex-col space-y-2 justify-center">
-            <div className="flex-none w-24 h-24 rounded-md p-2 flex items-center justify-center">
-                <img src={logo} />
-            </div>
+          <div className="flex-none w-24 h-24 rounded-md p-2 flex items-center justify-center">
+            <img src={logo} />
+          </div>
         </div>
         <div className="flex flex-col border border-gray-300">
           <div className="bg-base-300 px-4 py-2">Configuration</div>

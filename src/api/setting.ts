@@ -4,16 +4,11 @@ import { server } from "../storage";
 import { OpenAPPConfig } from "../types/config";
 
 async function getSetting(): Promise<Response<OpenAPPConfig>> {
-  return requests.get<OpenAPPConfig>(
-    `${server}/api/v1/config`
-  );
+  return requests.get<OpenAPPConfig>(`${server}/api/v1/config`);
 }
 
 async function updateSetting(config: OpenAPPConfig) {
-  return requests.post(
-    `${server}/api/v1/config`,
-    config
-  );
+  return requests.post(`${server}/api/v1/config`, config);
 }
 
 export const setting = {
