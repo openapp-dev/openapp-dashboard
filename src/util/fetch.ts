@@ -1,10 +1,13 @@
-import { Response, Request } from "../types";
+import { Response, Request } from "../types/common";
+import { token } from "../storage";
 
 async function request<T, R>(request: Request<T>): Promise<Response<R>> {
+  const authToken = token.get();
   const response = await fetch(request.path, {
     method: request.method,
     headers: {
       "Content-Type": "application/json",
+      Authorization: `${authToken}`,
     },
     body: JSON.stringify(request.data),
   });

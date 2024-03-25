@@ -11,7 +11,7 @@ import {
 import { Outlet } from "react-router";
 import { Link } from "react-router-dom";
 import { version } from "../api/version";
-
+import { RequireAuth } from "../component/AuthProvider";
 
 function OpenAppMenu() {
   return (
@@ -40,7 +40,7 @@ function OpenAppMenu() {
       </Menu.Item>
       <Menu.Item>
         <Link to="/store/publicservice">
-          <MdAutoAwesomeMotion className="w-6 h-6" />
+          <MdCloud className="w-6 h-6" />
           Public Service Store
         </Link>
       </Menu.Item>
@@ -63,38 +63,40 @@ export default function Layout() {
   }
 
   return (
-    <Drawer
-      open={visible}
-      onClickOverlay={toggleVisible}
-      side={
-        <div className="bg-base-200 text-base-content h-screen w-1/5 min-w-56">
-          <OpenAppMenu />
-        </div>
-      }
-    >
-      <div className="flex flex-col h-screen">
-        <Navbar>
-          <div className="flex-none xl:hidden block">
-            <Button shape="square" color="ghost" onClick={toggleVisible}>
-              <MdMenu className="w-6 h-6" />
-            </Button>
-          </div>
-          <div className="flex-1">
-            <Button tag="a" color="ghost" className="normal-case text-xl">
-              OpenAPP
-            </Button>
-          </div>
-          <div className="flex-none"></div>
-        </Navbar>
-        <div className="flex flex-grow">
-          <div className="w-1/5 min-w-56 xl:block hidden border-r border-gray-300">
+    <RequireAuth>
+      <Drawer
+        open={visible}
+        onClickOverlay={toggleVisible}
+        side={
+          <div className="bg-base-200 text-base-content h-screen w-1/5 min-w-56">
             <OpenAppMenu />
           </div>
-          <div className="w-full rounded-t-xl overflow-y-scroll overflow-x-hidden px-4">
-            <Outlet />
+        }
+      >
+        <div className="flex flex-col h-screen">
+          <Navbar>
+            <div className="flex-none xl:hidden block">
+              <Button shape="square" color="ghost" onClick={toggleVisible}>
+                <MdMenu className="w-6 h-6" />
+              </Button>
+            </div>
+            <div className="flex-1">
+              <Button tag="a" color="ghost" className="normal-case text-xl">
+                OpenAPP
+              </Button>
+            </div>
+            <div className="flex-none"></div>
+          </Navbar>
+          <div className="flex flex-grow">
+            <div className="w-1/5 min-w-56 xl:block hidden border-r border-gray-300">
+              <OpenAppMenu />
+            </div>
+            <div className="w-full rounded-t-xl overflow-y-scroll overflow-x-hidden px-4">
+              <Outlet />
+            </div>
           </div>
         </div>
-      </div>
-    </Drawer>
+      </Drawer>
+    </RequireAuth>
   );
 }
