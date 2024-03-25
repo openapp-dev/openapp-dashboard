@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { login } from "../api/login";
 import { token } from "../storage";
+import loginBackground from "../../public/login-background.jpg";
+import logo from "../../public/logo.png"
 
 interface State {
   username: string;
@@ -39,46 +41,57 @@ export default function Login() {
   }
 
   return (
-    <div className="h-screen flex items-center lg:justify-end justify-center">
-      <div className="flex flex-col w-96 rounded-lg border space-y-2 px-4 py-2 lg:mr-48">
+    <div className="h-screen flex items-center lg:justify-end justify-center bg-cover" style={{ backgroundImage: `url(${loginBackground})` }}>
+      <div className="flex flex-col w-96 rounded-lg space-y-8 px-4 py-4 lg:mr-48 bg-white">
         <div className="flex justify-between mt-4 text-lg items-center">
-          <span>Login</span>
+          <span color="black">Login</span>
           <Avatar
-            src="https://picsum.photos/200/200"
+            src={logo}
             size="sm"
-            shape="circle"
+            shape="square"
           />
         </div>
         <div className="flex flex-col space-y-2">
           <Input
             type="text"
             placeholder="username"
-            className="rounded-none border-x-0 border-t-0 border-b-2 focus:border-x-0 focus:border-t-0"
+            className="appearance-none bg-transparent rounded-none border-x-0 border-t-0 border-b-2 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
             value={state.username}
             onChange={(e) => {
               handleInputChange("username", e.target.value);
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+              handleLogin();
+              }
+            }}
           />
+          <span/>
           <Input
             type="password"
             placeholder="password"
-            className="rounded-none border-x-0 border-t-0 border-b-2"
+            className="appearance-none bg-transparent rounded-none border-x-0 border-t-0 border-b-2 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
             value={state.password}
             onChange={(e) => {
               handleInputChange("password", e.target.value);
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+              handleLogin();
+              }
+            }}
           />
-          <Link>Forget Password?</Link>
+          <span/>
+          <Link color="accent">Forget Password?</Link>
         </div>
-        <div className=" flex justify-center">
+        <div className=" flex justify-center ">
           <Button
-            color="primary"
             wide
-            className="rounded-3xl -mb-8"
+            className="rounded-3xl -mb-10 bg-sky-400 border-none color-white text-white bg-sky-600 hover:bg-sky-700"
             onClick={handleLogin}
-          >
-            Sign Up
-          </Button>
+            >
+              Sign In
+            </Button>
         </div>
       </div>
     </div>
