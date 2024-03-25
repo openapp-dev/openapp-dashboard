@@ -16,7 +16,7 @@ export default function App() {
     <AuthProvider>
         <Routes>
         <Route path="/" element={<Layout />}>
-            <Route index element={<AppTemplateStore />} />
+            <Route index element={<AppInstancePage />} />
             <Route path="/instance/app" element={<AppInstancePage />} />
             <Route path="/instance/app/detail" element={<AppInstanceDetail />} />
             <Route path="/instance/publicservice" element={<PublicServiceInstancePage />} />

@@ -1,9 +1,10 @@
 import { Avatar, Button, Input, Link } from "react-daisyui";
 import { useAuth } from "../component/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { login } from "../api/login";
 import { token } from "../storage";
+import { appInstance } from "../api";
 import loginBackground from "../../public/login-background.jpg";
 import logo from "../../public/logo.png"
 
@@ -13,8 +14,18 @@ interface State {
 }
 
 export default function Login() {
-  const auth = useAuth();
   const navigate = useNavigate();
+  useEffect(() => {
+    async function fetchData() {
+      const { success } =
+        await appInstance.listAllAppInstances();
+      if (!success) {
+        return;
+      }
+      navigate("/");
+    }
+    fetchData();
+  }, []);
 
   const [state, setState] = useState<State>({
     username: "",
@@ -25,6 +36,7 @@ export default function Login() {
     setState({ ...state, [key]: value });
   }
 
+  const auth = useAuth();
   async function handleLogin() {
     const { username, password } = state;
     const resp = await login(username, password);
