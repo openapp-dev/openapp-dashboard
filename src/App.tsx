@@ -8,21 +8,26 @@ import AppInstancePage from "./page/AppInstance";
 import SettingPage from "./page/Setting";
 import PublicServiceInstancePage from "./page/PublicServiceInstance";
 import AppInstanceDetail from "./page/AppInstanceDetail";
+import Login from "./page/Login";
+import { AuthProvider } from "./component/AuthProvider";
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<AppTemplateStore />} />
-        <Route path="/instance/app" element={<AppInstancePage />} />
-        <Route path="/instance/app/detail" element={<AppInstanceDetail />} />
-        <Route path="/instance/publicservice" element={<PublicServiceInstancePage />} />
-        <Route path="/store/app" element={<AppTemplateStore />} />
-        <Route path="/store/app/detail" element={<AppTemplateDetail />} />
-        <Route path="/store/publicservice" element={<PublicServiceTmeplate />} />
-        <Route path="/store/publicservice/detail" element={<PublicServiceTemplateDetail />} />
-        <Route path="/setting" element={<SettingPage />} />
-      </Route>
-    </Routes>
+    <AuthProvider>
+        <Routes>
+        <Route path="/" element={<Layout />}>
+            <Route index element={<AppTemplateStore />} />
+            <Route path="/instance/app" element={<AppInstancePage />} />
+            <Route path="/instance/app/detail" element={<AppInstanceDetail />} />
+            <Route path="/instance/publicservice" element={<PublicServiceInstancePage />} />
+            <Route path="/store/app" element={<AppTemplateStore />} />
+            <Route path="/store/app/detail" element={<AppTemplateDetail />} />
+            <Route path="/store/publicservice" element={<PublicServiceTmeplate />} />
+            <Route path="/store/publicservice/detail" element={<PublicServiceTemplateDetail />} />
+            <Route path="/setting" element={<SettingPage />} />
+        </Route>
+        <Route path="/login" element={<Login/>} />
+        </Routes>
+    </AuthProvider>
   );
 }

@@ -1,3 +1,14 @@
-const server = "http://172.16.1.6:61003";
+const server = "http://localhost:8080";
 
-export { server };
+const token = {
+  get(): string | null {
+    return localStorage.getItem("token");
+  },
+  set(value: string) {
+    localStorage.setItem("token", value);
+  },
+  clear() {
+    localStorage.removeItem("token");
+  },
+};
+export { server, token };
