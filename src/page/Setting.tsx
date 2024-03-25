@@ -1,8 +1,10 @@
-import { Divider, Input, Textarea } from "react-daisyui";
+import { Button, Divider, Input, Textarea } from "react-daisyui";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { setting } from "../api/setting";
 import { OpenAPPConfig } from "../types/config";
 import logo from "/logo.png";
+import { token } from "../storage";
 
 interface State {
   openappConfig?: OpenAPPConfig;
@@ -35,6 +37,12 @@ export default function SettingPage() {
   useEffect(() => {
     // TODO: send notification
   }, [state.error]);
+
+  const navigate = useNavigate();
+  function handleLogout() {
+    token.clear();
+    navigate("/login");
+  }
 
   return (
     <div className="flex flex-col">
@@ -78,6 +86,15 @@ export default function SettingPage() {
                 placeholder="Registry"
                 value={state.openappConfig?.password}
               />
+            </div>
+            <div className="justify-center ">
+              <Button
+                wide
+                className="rounded-3xl -mb-10 bg-sky-400 border-none color-white text-white bg-sky-600 hover:bg-sky-700"
+                onClick={handleLogout}
+                >
+                  Sign Out
+                </Button>
             </div>
           </div>
         </div>

@@ -33,7 +33,10 @@ export default function AppInstancePage() {
       }
       const appTemplateMap: { [key: string]: AppTemplate } = {};
       appTemplates.data?.forEach((appTemplate) => {
-        appTemplateMap[appTemplate.spec.title] = appTemplate;
+        var templateName = appTemplate.metadata.name;
+        if (templateName != undefined) {
+          appTemplateMap[templateName] = appTemplate;
+        }
       });
 
       setState({
