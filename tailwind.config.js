@@ -6,7 +6,11 @@ export default {
     "node_modules/react-daisyui/dist/**/*.js",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        login: "url('/login-background.jpg')",
+      },
+    },
   },
   plugins: [require("daisyui")],
   daisyui: {

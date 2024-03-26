@@ -2,11 +2,9 @@ import { Avatar, Button, Input, Link } from "react-daisyui";
 import { useAuth } from "../component/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { login } from "../api/login";
 import { token } from "../storage";
-import { appInstance } from "../api";
-import loginBackground from "../../public/login-background.jpg";
-import logo from "../../public/logo.png"
+import { login } from "../api";
+import logo from "/logo.png";
 
 interface State {
   username: string;
@@ -15,16 +13,12 @@ interface State {
 
 export default function Login() {
   const navigate = useNavigate();
+  const auth = useAuth();
+
   useEffect(() => {
-    async function fetchData() {
-      const { success } =
-        await appInstance.listAllAppInstances();
-      if (!success) {
-        return;
-      }
+    if (auth.isAuthenticated) {
       navigate("/");
     }
-    fetchData();
   }, []);
 
   const [state, setState] = useState<State>({
@@ -36,7 +30,6 @@ export default function Login() {
     setState({ ...state, [key]: value });
   }
 
-  const auth = useAuth();
   async function handleLogin() {
     const { username, password } = state;
     const resp = await login(username, password);
@@ -53,15 +46,11 @@ export default function Login() {
   }
 
   return (
-    <div className="h-screen flex items-center lg:justify-end justify-center bg-cover" style={{ backgroundImage: `url(${loginBackground})` }}>
+    <div className="h-screen flex items-center lg:justify-end justify-center bg-cover bg-login">
       <div className="flex flex-col w-96 rounded-lg space-y-8 px-4 py-4 lg:mr-48 bg-white">
         <div className="flex justify-between mt-4 text-lg items-center">
           <span color="black">Login</span>
-          <Avatar
-            src={logo}
-            size="sm"
-            shape="square"
-          />
+          <Avatar src={logo} size="sm" shape="square" />
         </div>
         <div className="flex flex-col space-y-2">
           <Input
@@ -74,11 +63,11 @@ export default function Login() {
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-              handleLogin();
+                handleLogin();
               }
             }}
           />
-          <span/>
+          <span />
           <Input
             type="password"
             placeholder="password"
@@ -89,21 +78,21 @@ export default function Login() {
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-              handleLogin();
+                handleLogin();
               }
             }}
           />
-          <span/>
+          <span />
           <Link color="accent">Forget Password?</Link>
         </div>
         <div className=" flex justify-center ">
           <Button
             wide
-            className="rounded-3xl -mb-10 bg-sky-400 border-none color-white text-white bg-sky-600 hover:bg-sky-700"
+            className="rounded-3xl -mb-10  border-none color-white text-white bg-sky-600 hover:bg-sky-700"
             onClick={handleLogin}
-            >
-              Sign In
-            </Button>
+          >
+            Sign In
+          </Button>
         </div>
       </div>
     </div>
