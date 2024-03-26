@@ -54,7 +54,7 @@ export default function AppInstancePage() {
   }, [state.error]);
 
   return (
-    <div className="w-full">
+    <div className="w-full mt-8">
       <div className="w-full mb-16 mt-1">
         <form className="mx-auto w-3/5">
           <div className="relative">

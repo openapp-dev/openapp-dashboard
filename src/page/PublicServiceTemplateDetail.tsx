@@ -14,7 +14,7 @@ export default function PublicServiceTemplateDetail() {
   }
   const inputs = parseYaml<Inputs>(template.spec.inputs);
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col mt-8">
       <div className="flex space-x-1">
         <span className="text-gray-500">
           <Link to="/store/app">Public Service Store</Link>
