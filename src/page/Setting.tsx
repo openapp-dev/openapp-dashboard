@@ -55,7 +55,7 @@ export default function SettingPage() {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col mt-8">
       <div className="flex space-x-1">
         <span className="text-gray-500">
           <span>OpenAPP Setting</span>
