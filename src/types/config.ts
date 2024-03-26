@@ -1,6 +1,6 @@
 interface OpenAPPConfig {
   registry: string;
-  userName: string;
+  username: string;
   password: string;
 }
 
