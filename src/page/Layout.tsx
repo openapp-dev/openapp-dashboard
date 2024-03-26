@@ -10,7 +10,6 @@ import {
 } from "react-icons/md";
 import { Outlet } from "react-router";
 import { Link } from "react-router-dom";
-import { version } from "../api/version";
 import { RequireAuth } from "../component/AuthProvider";
 
 function OpenAppMenu() {
