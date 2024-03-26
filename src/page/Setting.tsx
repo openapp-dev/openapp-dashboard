@@ -5,6 +5,7 @@ import { setting } from "../api/setting";
 import { OpenAPPConfig } from "../types/config";
 import logo from "/logo.png";
 import { token } from "../storage";
+import { useAuth } from "../component/AuthProvider";
 
 interface State {
   openappConfig?: OpenAPPConfig;
@@ -39,9 +40,12 @@ export default function SettingPage() {
   }, [state.error]);
 
   const navigate = useNavigate();
+  const auth = useAuth();
   function handleLogout() {
-    token.clear();
-    navigate("/login");
+    auth.signout(() => {
+      token.clear();
+      navigate("/login");
+    });
   }
 
   return (
@@ -90,11 +94,11 @@ export default function SettingPage() {
             <div className="justify-center ">
               <Button
                 wide
-                className="rounded-3xl -mb-10 bg-sky-400 border-none color-white text-white bg-sky-600 hover:bg-sky-700"
+                className="rounded-3xl -mb-10 border-none color-white text-white bg-sky-600 hover:bg-sky-700"
                 onClick={handleLogout}
-                >
-                  Sign Out
-                </Button>
+              >
+                Sign Out
+              </Button>
             </div>
           </div>
         </div>
