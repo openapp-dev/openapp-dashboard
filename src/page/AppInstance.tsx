@@ -56,27 +56,28 @@ export default function AppInstancePage() {
         error: null,
         appTemplates: appTemplateMap,
       });
+      setSearchState({ ...searchState, appInstances: data ?? [] });
     }
     fetchData();
   }, []);
 
   useEffect(() => {
-    // TODO: send notification
-  }, [state.error]);
-
-  useEffect(() => {
-    if (searchState.keyword === "") {
+    if (searchState.keyword === "" || searchState.keyword === undefined) {
       setSearchState({ ...searchState, appInstances: state.appInstances });
     } else {
       const filteredAppInstances = state.appInstances.filter((appInstance) => {
         const appTemplate = state.appTemplates[appInstance.spec.appTemplate];
         return appTemplate.spec.title
           .toLowerCase()
-          .includes(searchState.keyword.toLowerCase());
+          .startsWith(searchState.keyword.toLowerCase());
       });
       setSearchState({ ...searchState, appInstances: filteredAppInstances });
     }
   }, [searchState.keyword]);
+
+  useEffect(() => {
+    // TODO: send notification
+  }, [state.error]);
 
   function handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
     setSearchState({ ...searchState, keyword: event.target.value });
