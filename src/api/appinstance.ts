@@ -1,6 +1,5 @@
 import { requests } from "../util";
-import { AppInstance } from "../types/appinstance";
-import { Response } from "../types/common";
+import { Response, AppInstance } from "../types";
 import { server } from "../storage";
 
 async function listAllAppInstances(): Promise<Response<AppInstance[]>> {

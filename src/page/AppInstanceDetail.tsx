@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import { AppInstance } from "../types/appinstance";
-import { AppTemplate } from "../types/apptemplate";
+import { AppTemplate, AppInstance } from "../types";
 import { useLocation } from "react-router-dom";
 import { Button, Divider } from "react-daisyui";
 import Panel from "../component/Panel";
