@@ -5,6 +5,8 @@ import {
   MdAutoAwesomeMosaic,
   MdAutoAwesomeMotion,
   MdCloud,
+  MdList,
+  MdMenu,
   MdSettings,
 } from "react-icons/md";
 import { Outlet } from "react-router";
@@ -87,26 +89,35 @@ export default function Layout() {
           </div>
         }
       >
-        <div className="flex flex-col h-screen">
-          <div className="flex flex-grow">
-            <div className="w-1/5 min-w-56 xl:block hidden border-r border-gray-300 bg-sky-200">
-              <OpenAppMenu />
-              <div className="absolute bottom-2 left-2 flex flex-row items-center space-x-2">
-                <Button
-                  size="sm"
-                  color="ghost"
-                  onClick={() => {
-                    window.open("https://github.com/openapp-dev/openapp");
-                  }}
-                >
-                  <BsGithub className="w-5 h-5" />
-                </Button>
-                <span className="text-xs">OpenAPP version: {openVersion}</span>
-              </div>
+        <div className="flex flex-row h-screen">
+          <div className="w-1/5 min-w-56 xl:flex hidden border-r border-gray-300 bg-sky-200 flex-col justify-between">
+            <OpenAppMenu />
+            <div className="flex flex-row items-center justify-center space-x-2 mb-4">
+              <Button
+                size="sm"
+                color="ghost"
+                onClick={() => {
+                  window.open("https://github.com/openapp-dev/openapp");
+                }}
+              >
+                <BsGithub className="w-5 h-5" />
+              </Button>
+              <span className="text-xs">OpenAPP version: {openVersion}</span>
             </div>
-            <div className="w-full rounded-t-xl overflow-y-scroll overflow-x-hidden px-4">
-              <Outlet />
+          </div>
+          <div className="w-full overflow-y-scroll overflow-x-hidden xl:px-4 px-2 flex flex-col">
+            <div className="flex flex-row mt-2">
+              <Button
+                size="sm"
+                color="ghost"
+                shape="square"
+                onClick={toggleVisible}
+                className="xl:hidden"
+              >
+                <MdMenu className="w-6 h-6" />
+              </Button>
             </div>
+            <Outlet />
           </div>
         </div>
       </Drawer>

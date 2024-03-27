@@ -83,9 +83,9 @@ export default function AppInstancePage() {
   }
 
   return (
-    <div className="w-full mt-8">
+    <div className="w-full mt-4">
       <div className="w-full mb-16 mt-1">
-        <div className="relative mx-auto w-3/5">
+        <div className="relative sm:mx-auto sm:w-3/5">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
             <MdSearch className="w-5 h-5 text-gray-400" />
           </div>
