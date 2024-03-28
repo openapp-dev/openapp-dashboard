@@ -7,7 +7,7 @@ interface PanelProps {
 
 export default function Panel({ title, children }: PanelProps) {
   return (
-    <div className="flex flex-col border border-gray-300">
+    <div className="flex flex-col border border-gray-300 rounded-lg overflow-hidden">
       <div className="bg-base-300 px-4 py-2">{title}</div>
       {children}
     </div>

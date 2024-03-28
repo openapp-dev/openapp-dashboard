@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { appInstance, appTemplate } from "../api";
 import { AppInstance, AppTemplate } from "../types";
-import InstanceCard from "../component/InstanceCard";
 import { MdSearch } from "react-icons/md";
+import AppInstanceCard from "../component/InstanceCard";
 
 interface State {
   appInstances: AppInstance[];
@@ -66,10 +66,8 @@ export default function AppInstancePage() {
       setSearchState({ ...searchState, appInstances: state.appInstances });
     } else {
       const filteredAppInstances = state.appInstances.filter((appInstance) => {
-        const appTemplate = state.appTemplates[appInstance.spec.appTemplate];
-        return appTemplate.spec.title
-          .toLowerCase()
-          .startsWith(searchState.keyword.toLowerCase());
+        let instanceName = appInstance.metadata.name?? "";
+        return instanceName.toLowerCase().startsWith(searchState.keyword.toLowerCase());
       });
       setSearchState({ ...searchState, appInstances: filteredAppInstances });
     }
@@ -99,11 +97,11 @@ export default function AppInstancePage() {
           />
         </div>
       </div>
-      <div className="grid xl:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-4">
+      <div className="grid xl:grid-cols-8 md:grid-cols-4 grid-cols-2 gap-4">
         {searchState.appInstances.map((appInstance, idx) => (
-          <InstanceCard
+          <AppInstanceCard
             key={idx}
-            title={state.appTemplates[appInstance.spec.appTemplate].spec.title}
+            title={appInstance.metadata.name ?? ""}
             icon={state.appTemplates[appInstance.spec.appTemplate].spec.icon}
           />
         ))}

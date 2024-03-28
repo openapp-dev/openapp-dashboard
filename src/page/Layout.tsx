@@ -5,7 +5,6 @@ import {
   MdAutoAwesomeMosaic,
   MdAutoAwesomeMotion,
   MdCloud,
-  MdList,
   MdMenu,
   MdSettings,
 } from "react-icons/md";

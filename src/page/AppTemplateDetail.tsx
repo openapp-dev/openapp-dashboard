@@ -1,6 +1,8 @@
 import { Button, Divider, Input } from "react-daisyui";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import {
+  InboxStackIcon } from '@heroicons/react/24/outline'
 import { AppTemplate, Inputs } from "../types";
 import { renderFormField } from "../util/helper";
 import { parseYaml } from "../util";
@@ -43,13 +45,12 @@ export default function AppTemplateDetail() {
             <div className="text-sm">{template.spec.description}</div>
           </div>
           <div className="flex-none">
-            <Button className="w-full" color="primary">
-              Install App
+            <Button className="px-4 py-2 bg-sky-600 hover:bg-sky-700 rounded-md">
+              <InboxStackIcon className="h-6 w-6 text-white"></InboxStackIcon>
             </Button>
           </div>
         </div>
-        <div className="flex flex-col border border-gray-300">
-          <div className="bg-base-300 px-4 py-2">Configuration</div>
+        <Panel title="Configuration">
           <div className="flex flex-col p-2 space-y-2">
             {/* Following are the build-in necessary params */}
             <div className="flex items-center flex-col sm:flex-row sm:space-x-4 space-y-2">
@@ -69,8 +70,9 @@ export default function AppTemplateDetail() {
             {/* Following are the params rendering based on template spec */}
             {Object.entries(inputs).map(renderFormField)}
           </div>
-        </div>
-        <Panel title="README.md" />
+        </Panel>
+        <Panel title="APP details">
+        </Panel>
       </div>
     </div>
   );
