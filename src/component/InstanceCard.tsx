@@ -1,11 +1,20 @@
+import { useNavigate } from "react-router-dom";
+
 interface InstanceCardProps {
   title: string;
   icon?: string;
 }
 
-export default function InstanceCard({ title, icon }: InstanceCardProps) {
+export default function AppInstanceCard({ title, icon }: InstanceCardProps) {
+  const navigate = useNavigate();
+  function handleCardClick(instanceName: string) {
+    navigate("/instance/app/detail", {
+      state: { name: instanceName },
+    });
+  }
+
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col cursor-pointer" onClick={() => handleCardClick(title)}>
       <div className="flex justify-center">
         {icon ? (
           <img src={icon} alt="icon" className="w-16 h-16 border rounded-md hover:border-blue-300" />
