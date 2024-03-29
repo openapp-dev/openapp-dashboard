@@ -2,11 +2,16 @@ import { Button, Divider, Input } from "react-daisyui";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import {
-  InboxStackIcon } from '@heroicons/react/24/outline'
+  InboxStackIcon } from '@heroicons/react/24/outline';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from "rehype-raw";
+
 import { AppTemplate, Inputs } from "../types";
 import { renderFormField } from "../util/helper";
 import { parseYaml } from "../util";
 import Panel from "../component/Panel";
+import { useEffect, useState } from "react";
 
 export default function AppTemplateDetail() {
   const location = useLocation();
@@ -15,6 +20,19 @@ export default function AppTemplateDetail() {
     return <div>Template not found</div>;
   }
   const inputs = parseYaml<Inputs>(template.spec.inputs);
+
+  const [appDetails, setAappDetails] = useState<string>('');
+  useEffect(() => {
+    if (template.spec.url != "") {
+      console.log(template.spec);
+      fetch(template.spec.url)
+      .then(response => response.text())
+      .then(data => {
+        setAappDetails(data);
+      })
+    }
+  })
+
   return (
     <div className="flex flex-col mt-8">
       <div className="flex space-x-1">
@@ -72,6 +90,17 @@ export default function AppTemplateDetail() {
           </div>
         </Panel>
         <Panel title="APP details">
+          <div className="pl-3 pr-3 pt-3">
+            <Markdown
+              className="prose prose-zinc text-black max-w-none
+                prose-li:pl-0 prose-li:mt-0 prose-li:mb-0
+                prose-img:mt-0 prose-img:mb-1 prose-a:text-blue-800
+                prose-img:max-w-full prose-img:flex prose-img:inline-flex"
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeRaw]}>
+                {appDetails}
+            </Markdown>
+          </div>
         </Panel>
       </div>
     </div>
