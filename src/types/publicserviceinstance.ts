@@ -5,7 +5,7 @@ import {
 } from "@kubernetes-models/apimachinery/apis/meta/v1";
 import { TypeMeta } from "@kubernetes-models/base";
 interface PublicServiceInstance extends TypeMeta {
-  metadata?: ObjectMeta;
+  metadata: ObjectMeta;
   spec: PublicServiceInstanceSpec;
   status: PublicServiceInstanceStatus;
 }
