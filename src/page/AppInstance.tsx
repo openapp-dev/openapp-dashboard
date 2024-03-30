@@ -82,7 +82,7 @@ export default function AppInstancePage() {
   }
 
   return (
-    <div className="w-full mt-4">
+    <div className="w-full h-full mt-4">
       <div className="w-full mb-16 mt-1">
         <div className="relative sm:mx-auto sm:w-3/5">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -97,15 +97,22 @@ export default function AppInstancePage() {
           />
         </div>
       </div>
-      <div className="grid xl:grid-cols-8 md:grid-cols-4 grid-cols-2 gap-4">
-        {searchState.appInstances.map((appInstance, idx) => (
-          <AppInstanceCard
-            key={idx}
-            title={appInstance.metadata.name ?? ""}
-            icon={state.appTemplates[appInstance.spec.appTemplate].spec.icon}
-          />
-        ))}
-      </div>
+
+      {searchState.appInstances.length === 0 ? (
+        <div className="w-full h-3/4 flex flex-col justify-center items-center">
+          <img className="w-1/4 mx-auto align-middle" src="../../public/404.png" />
+        </div>
+      ) : (
+        <div className="grid xl:grid-cols-8 md:grid-cols-4 grid-cols-2 gap-4">
+          {searchState.appInstances.map((appInstance, idx) => (
+            <AppInstanceCard
+              key={idx}
+              title={appInstance.metadata.name ?? ""}
+              icon={state.appTemplates[appInstance.spec.appTemplate].spec.icon}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
