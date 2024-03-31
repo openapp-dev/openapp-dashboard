@@ -5,15 +5,12 @@ import {
   DocumentIcon,
   InboxStackIcon,
   QuestionMarkCircleIcon} from '@heroicons/react/24/outline';
-import Markdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeRaw from "rehype-raw";
 import { useEffect, useState, Fragment, useRef } from "react";
 import { Dialog, Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 
 import { AppTemplate, Inputs } from "../types";
-import { renderFormField } from "../util/helper";
+import { renderFormField, renderMardownDetails } from "../util/helper";
 import { parseYaml } from "../util";
 import { publicServiceInstance } from "../api/publicserviceinstance";
 import Panel from "../component/Panel";
@@ -37,22 +34,11 @@ export default function AppTemplateDetail() {
   );
   const [appDetails, setAppDetails] = useState<JSX.Element>(emptyDetails);
   useEffect(() => {
-    fetch(template.spec.url)
-      .then(response => response.text())
-      .then(data => {
-        setAppDetails((
-          <Markdown
-            className="prose prose-zinc text-black max-w-none
-              prose-li:pl-0 prose-li:mt-0 prose-li:mb-0
-              prose-img:mt-0 prose-img:mb-1 prose-a:text-blue-800
-              prose-img:max-w-full prose-img:flex prose-img:inline-flex"
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeRaw]}>
-              {data}
-          </Markdown>
-        ))
-      });
-  }, [])
+    const fetchAppDetails = async () => {
+      setAppDetails(await renderMardownDetails(template.spec.url));
+    };
+    fetchAppDetails();
+  }, []);
 
   const [publicService, setPublicService] = useState([{ id: 1, name: 'No exposure', unavailable: false }])
   useEffect(() => {
@@ -192,6 +178,8 @@ export default function AppTemplateDetail() {
             <div className="flex items-center flex-col sm:flex-row sm:space-x-4 space-y-2">
               <label className="sm:min-w-64">Instance Name</label>
               <Input
+                name="instanceName"
+                type="text"
                 className="sm:w-96 w-full focus:outline-blue-500"
                 placeholder="APP instance name"
               />

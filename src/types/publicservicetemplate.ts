@@ -6,7 +6,7 @@ import { TypeMeta } from "@kubernetes-models/base";
 import { ExposeType } from "./common";
 
 interface PublicServiceTemplate extends TypeMeta {
-  metadata?: ObjectMeta;
+  metadata: ObjectMeta;
   spec: PublicServiceTemplateSpec;
 }
 

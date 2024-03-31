@@ -1,6 +1,3 @@
-import { Button } from "react-daisyui";
-import { MdShare } from "react-icons/md";
-
 interface TemplateCardProps {
   handleCardClick: () => void;
   icon: string;
@@ -14,42 +11,31 @@ export default function TemplateCard({
   title,
   author,
   description,
-  url,
   icon,
   handleCardClick,
 }: TemplateCardProps) {
   return (
     <div
-      className="flex flex-col space-y-2 sm:p-6 p-4 border border-gray-300 rounded-md hover:border-sky-300 hover:cursor-pointer"
+      className="flex flex-col space-y-2 sm:p-6 p-4 border border-gray-300 rounded-md hover:border-sky-300 hover:cursor-pointer hover:shadow-md"
       onClick={handleCardClick}
     >
-      <div className="flex">
-        <div className="w-12 h-12 border border-gray-300 rounded-md flex justify-center items-center">
+      <div className="flex flex-col justify-center w-full flex-row">
+        <div className="w-full h-12 flex items-center relative">
           {icon === "" ? (
-            <span className="text-3xl font-bold">{title[0].toUpperCase()}</span>
+            <span className="text-3xl font-bold h-full w-12 border border-gray-300 rounded-md flex justify-center items-center">{title[0].toUpperCase()}</span>
           ) : (
-            <img src={icon} alt={title} className="w-full h-full" />
+            <img src={icon} alt={title} className="h-full w-12 border border-gray-300 rounded-md" />
           )}
+          <div className="text-xl font-bold mr-2 absolute right-1/3">
+            <span>{title}</span>
+          </div>
         </div>
-      </div>
-      <div className="text-xl font-bold">
-        <span>{title}</span>
       </div>
       <div className="text-sm">
         <p className="truncate">{description}</p>
       </div>
       <div className="flex justify-between items-baseline text-sm">
-        <span>By {author}</span>
-        <Button
-          size="sm"
-          color="ghost"
-          onClick={(e) => {
-            e.stopPropagation();
-            window.location.href = url;
-          }}
-        >
-          <MdShare className="hover:cursor-pointer hover:fill-sky-300" />
-        </Button>
+        <em className="font-bold">By {author}</em>
       </div>
     </div>
   );

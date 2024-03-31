@@ -10,6 +10,7 @@ import PublicServiceInstancePage from "./page/PublicServiceInstance";
 import AppInstanceDetail from "./page/AppInstanceDetail";
 import Login from "./page/Login";
 import { AuthProvider } from "./component/AuthProvider";
+import PublicServiceInstanceDetail from "./page/PublicServiceInstanceDetail";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
             <Route path="/instance/app" element={<AppInstancePage />} />
             <Route path="/instance/app/detail" element={<AppInstanceDetail />} />
             <Route path="/instance/publicservice" element={<PublicServiceInstancePage />} />
+            <Route path="/instance/publicservice/detail" element={<PublicServiceInstanceDetail />} />
             <Route path="/store/app" element={<AppTemplateStore />} />
             <Route path="/store/app/detail" element={<AppTemplateDetail />} />
             <Route path="/store/publicservice" element={<PublicServiceTmeplate />} />
