@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { appInstance, appTemplate } from "../api";
 import { AppInstance, AppTemplate } from "../types";
 import { MdSearch } from "react-icons/md";
-import AppInstanceCard from "../component/InstanceCard";
+import { AppInstanceCard}  from "../component/InstanceCard";
+import { Loading } from "../component/Loading";
 
 interface State {
   appInstances: AppInstance[];
@@ -28,6 +29,7 @@ export default function AppInstancePage() {
     appInstances: state.appInstances,
     keyword: "",
   });
+  const [initialized, setInitialized] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -50,6 +52,8 @@ export default function AppInstancePage() {
         }
       });
 
+      await new Promise(f => setTimeout(f, 1000));
+      setInitialized(true);
       setState({
         appInstances: data ?? [],
         loading: false,
@@ -97,21 +101,24 @@ export default function AppInstancePage() {
           />
         </div>
       </div>
-
-      {searchState.appInstances.length === 0 ? (
-        <div className="w-full h-3/4 flex flex-col justify-center items-center">
-          <img className="w-1/4 mx-auto align-middle" src="../../public/404.png" />
-        </div>
-      ) : (
-        <div className="grid xl:grid-cols-8 md:grid-cols-4 grid-cols-2 gap-4">
-          {searchState.appInstances.map((appInstance, idx) => (
-            <AppInstanceCard
-              key={idx}
-              title={appInstance.metadata.name ?? ""}
-              icon={state.appTemplates[appInstance.spec.appTemplate].spec.icon}
-            />
-          ))}
-        </div>
+      {initialized ? (
+        searchState.appInstances.length === 0 ? (
+          <div className="w-full h-3/4 flex flex-col justify-center items-center">
+            <img className="w-1/4 mx-auto align-middle" src="../../public/404.png" />
+          </div>
+        ) : (
+          <div className="grid xl:grid-cols-8 md:grid-cols-4 grid-cols-2 gap-4">
+            {searchState.appInstances.map((appInstance, idx) => (
+              <AppInstanceCard
+                key={idx}
+                title={appInstance.metadata.name ?? ""}
+                icon={state.appTemplates[appInstance.spec.appTemplate].spec.icon}
+              />
+            ))}
+          </div>
+        )
+      ): (
+        <Loading></Loading>
       )}
     </div>
   );

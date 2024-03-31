@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { AppTemplate, AppInstance } from "../types";
+import { AppTemplate, AppInstance, PublicServiceInstance, PublicServiceTemplate } from "../types";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Divider } from "react-daisyui";
 import {
@@ -13,12 +13,12 @@ import { Menu, Transition, Dialog } from '@headlessui/react'
 import { Fragment, useRef, ReactElement, useEffect, useState } from 'react'
 
 import Panel from "../component/Panel";
-import { appInstance, appTemplate } from "../api";
+import { publicServiceInstance, publicServiceTemplate } from "../api";
 import { logs } from "../api/logs"
 
 interface State {
-  appInstance: AppInstance | null;
-  appTemplate: AppTemplate | null;
+  instance: PublicServiceInstance | null;
+  template: PublicServiceTemplate | null;
   loading: boolean;
   error: string | null;
 }
@@ -27,7 +27,7 @@ interface MenuProps {
   className: string;
 }
 
-export default function AppInstanceDetail() {
+export default function PublicServiceInstanceDetail() {
   const location = useLocation();
   const instanceName = location.state.name;
 
@@ -113,12 +113,12 @@ export default function AppInstanceDetail() {
     )
   }
 
-  async function handleDeleteAPPInstance() {
-    let name = state.appInstance?.metadata.name ?? "";
+  async function handleDeleteInstance() {
+    let name = state.instance?.metadata.name ?? "";
     if (name === "") {
       return;
     }
-    const resp = await appInstance.deleteAppInstance(name);
+    const resp = await publicServiceInstance.deletePublicServiceInstance(name);
     if (!resp.success) {
       setState({ ...state, error: resp.message });
       return;
@@ -127,8 +127,8 @@ export default function AppInstanceDetail() {
   }
 
   const [state, setState] = useState<State>({
-    appInstance: null,
-    appTemplate: null,
+    instance: null,
+    template: null,
     loading: true,
     error: null,
   });
@@ -138,29 +138,29 @@ export default function AppInstanceDetail() {
   useEffect(() => {
     async function fetchData() {
       const instance  =
-        await appInstance.getAppInstance(instanceName);
+        await publicServiceInstance.getPublicServiceInstance(instanceName);
       if (!instance.success) {
         setState({ ...state, loading: false, error: instance.message });
         return;
       }
-      let templateName =  instance.data?.spec.appTemplate?? "";
+      let templateName =  instance.data?.spec.publicServiceTemplate?? "";
       if (templateName === "") {
         return;
       }
-      const template = await appTemplate.getAppTemplate(templateName);
+      const template = await publicServiceTemplate.getPublicServiceTemplate(templateName);
       if (!template.success) {
         setState({ ...state, loading: false, error: template.message });
         return;
       }
 
       setState({
-        appInstance: instance.data ?? null,
-        appTemplate: template.data ?? null,
+        instance: instance.data ?? null,
+        template: template.data ?? null,
         loading: false,
         error: null,
       });
 
-      const logGet = await logs.getAPPInstanceLogs(instanceName);
+      const logGet = await logs.getPublicServiceInstanceLogs(instanceName);
       if (!logGet.success) {
         setState({ ...state, loading: false, error: logGet.message });
         return;
@@ -285,7 +285,7 @@ export default function AppInstanceDetail() {
                         </Dialog.Title>
                         <div className="mt-2">
                           <p className="text-sm text-red-700">
-                            Are you sure to delete APP {state.appInstance?.metadata.name}?
+                            Are you sure to delete Public Service {state.instance?.metadata.name}?
                           </p>
                         </div>
                       </div>
@@ -297,7 +297,7 @@ export default function AppInstanceDetail() {
                       className="ml-3 bg-red-500 hover:bg-red-600 mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm ring-none sm:mt-0 sm:w-auto"
                       onClick={() => {
                           setDeleteWaringOpen(false);
-                          handleDeleteAPPInstance();
+                          handleDeleteInstance();
                         }
                       }
                       ref={cancelButtonRef}
@@ -324,28 +324,28 @@ export default function AppInstanceDetail() {
           <Link to="/instance/app">APP instance</Link>
         </span>
         <span>/</span>
-        <span className="font-bold">{state.appInstance?.metadata.name}</span>
+        <span className="font-bold">{state.instance?.metadata.name}</span>
       </div>
       <Divider />
       <div className="flex flex-col p-4 space-y-4">
         <div className="flex md:space-x-4 md:flex-row flex-col space-y-2">
           <div className="flex-none w-24 h-24 rounded-md p-2 border border-gray-300">
-            {state.appTemplate?.spec.icon === "" ? (
-              <span className="text-lg font-bold">
-                {state.appTemplate?.spec.title[0].toUpperCase()}
+            {state.template?.spec.icon === "" ? (
+              <span className="font-bold w-full h-full text-5xl flex justify-center items-center">
+                {state.template?.spec.title[0].toUpperCase()}
               </span>
             ) : (
               <img
-                src={state.appTemplate?.spec.icon}
-                alt={state.appTemplate?.spec.title}
+                src={state.template?.spec.icon}
+                alt={state.template?.spec.title}
                 className="w-full h-full"
               />
             )}
           </div>
           <div className="flex-1 flex-col space-y-1">
-            <div className="text-2xl font-bold">{state.appInstance?.metadata.name}</div>
-            <div className="text-sm">Powered by {state.appTemplate?.metadata.name}</div>
-            <div className="text-sm">{state.appTemplate?.spec.description}</div>
+            <div className="text-2xl font-bold">{state.instance?.metadata.name}</div>
+            <div className="text-sm">Powered by {state.template?.metadata.name}</div>
+            <div className="text-sm">{state.template?.spec.description}</div>
           </div>
           <div className="flex-none">
             <Menu as="div" className="inline-block text-left rounded-md bg-sky-600 hover:bg-sky-700">
@@ -418,7 +418,7 @@ export default function AppInstanceDetail() {
             </Menu>
           </div>
         </div>
-        <Panel title="APP Status">
+        <Panel title="Public Service Status">
           <div className="flex flex-col p-2 space-y-2">
             <div className="flex items-center flex-col sm:flex-row sm:space-x-1 space-y-2">
               <label className="sm:min-w-8">
@@ -427,7 +427,7 @@ export default function AppInstanceDetail() {
               <label className="sm:min-w-60">
                 Ready
               </label>
-              <span>{state.appInstance?.status.appReady ? "Yes" : "No"}</span>
+              <span>{state.instance?.status.publicServiceReady ? "Yes" : "No"}</span>
             </div>
             <div className="flex items-center flex-col sm:flex-row sm:space-x-1 space-y-2">
               <label className="sm:min-w-8">
@@ -438,32 +438,16 @@ export default function AppInstanceDetail() {
               </label>
               <Link
                 className="text-blue-500 hover:text-blue-800"
-                to={state.appInstance?.status.localServiceURL? state.appInstance?.status.localServiceURL : ""}
+                to={state.instance?.status.localServiceURL? state.instance?.status.localServiceURL : ""}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {state.appInstance?.status.localServiceURL}
-              </Link>
-            </div>
-            <div className="flex items-center flex-col sm:flex-row sm:space-x-1 space-y-2">
-              <label className="sm:min-w-8">
-                <GlobeAltIcon className="w-5 mt-1 text-sky-600"></GlobeAltIcon>
-              </label>
-              <label className="sm:min-w-60">
-                Public link
-              </label>
-              <Link
-                className="text-blue-500 hover:text-blue-800"
-                to={state.appInstance?.status.externalServiceURL? state.appInstance?.status.externalServiceURL : ""}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {state.appInstance?.status.externalServiceURL}
+                {state.instance?.status.localServiceURL}
               </Link>
             </div>
           </div>
         </Panel>
-        <Panel title="APP Logs">
+        <Panel title="Public Service Logs">
           <div className="bg-neutral-700 text-slate-300 pb-3 pl-3 pr-3 pt-3 h-max text-sm">
             {log}
           </div>
