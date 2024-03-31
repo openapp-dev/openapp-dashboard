@@ -118,7 +118,7 @@ export default function AppInstancePage() {
           </div>
         )
       ): (
-        <Loading></Loading>
+        <Loading />
       )}
     </div>
   );

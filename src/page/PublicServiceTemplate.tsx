@@ -4,6 +4,7 @@ import { PublicServiceTemplate } from "../types";
 import TemplateCard from "../component/TemplateCard";
 import { useNavigate } from "react-router-dom";
 import { MdSearch } from "react-icons/md";
+import { Loading } from "../component/Loading";
 
 interface State {
   publicServiceTemplates: PublicServiceTemplate[];
@@ -27,6 +28,8 @@ export default function PublicServiceTemplateStore() {
     publicServiceTemplates: state.publicServiceTemplates,
     keyword: "",
   });
+  const [initialized, setInitialized] = useState<boolean>(false);
+
   useEffect(() => {
     async function fetchData() {
       const { success, message, data } =
@@ -40,6 +43,9 @@ export default function PublicServiceTemplateStore() {
         loading: false,
         error: null,
       });
+
+      await new Promise(f => setTimeout(f, 1000));
+      setInitialized(true);
       setSearchState({...searchState, publicServiceTemplates: data ?? []});
     }
     fetchData();
@@ -81,29 +87,33 @@ export default function PublicServiceTemplateStore() {
           </div>
           <input
             className="block w-full p-4 ps-10 text-sm text-black border border-gray-200 rounded-lg bg-white focus:outline-blue-500"
-            placeholder="Search APP templates"
+            placeholder="Search Public Service templates"
             value={searchState.keyword}
             onChange={handleSearchChange}
             required
           />
         </div>
       </div>
-      {searchState.publicServiceTemplates.length === 0 ? (
-        <div className="w-full h-3/4 flex flex-col justify-center items-center">
-          <img className="w-1/4 mx-auto align-middle" src="../../public/404.png" />
-        </div>
+      {initialized? (
+        searchState.publicServiceTemplates.length === 0 ? (
+          <div className="w-full h-3/4 flex flex-col justify-center items-center">
+            <img className="w-1/4 mx-auto align-middle" src="../../public/404.png" />
+          </div>
+        ): (
+          <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
+            {state.publicServiceTemplates.map((publicServiceTemplate, idx) => (
+              <TemplateCard
+                key={idx}
+                {...publicServiceTemplate.spec}
+                handleCardClick={() => {
+                  handleCardClick(publicServiceTemplate);
+                }}
+              />
+            ))}
+          </div>
+        )
       ): (
-        <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
-          {state.publicServiceTemplates.map((publicServiceTemplate, idx) => (
-            <TemplateCard
-              key={idx}
-              {...publicServiceTemplate.spec}
-              handleCardClick={() => {
-                handleCardClick(publicServiceTemplate);
-              }}
-            />
-          ))}
-        </div>
+        <Loading />
       )}
     </div>
   );

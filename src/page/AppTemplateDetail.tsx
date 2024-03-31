@@ -14,6 +14,7 @@ import { renderFormField, renderMardownDetails } from "../util/helper";
 import { parseYaml } from "../util";
 import { publicServiceInstance } from "../api/publicserviceinstance";
 import Panel from "../component/Panel";
+import { Loading } from "../component/Loading";
 
 
 export default function AppTemplateDetail() {
@@ -24,14 +25,7 @@ export default function AppTemplateDetail() {
   }
   const inputs = parseYaml<Inputs>(template.spec.inputs);
 
-  let emptyDetails = (
-    <div className="w-full flex flex-col justify-center items-center">
-      <DocumentIcon
-        className="w-10 mt-10 mb-4 text-gray-500">
-      </DocumentIcon>
-      <span className="text-gray-500 font-medium mb-10">No corresponding APP information</span>
-    </div>
-  );
+  let emptyDetails = (<Loading />);
   const [appDetails, setAppDetails] = useState<JSX.Element>(emptyDetails);
   useEffect(() => {
     const fetchAppDetails = async () => {
@@ -40,7 +34,8 @@ export default function AppTemplateDetail() {
     fetchAppDetails();
   }, []);
 
-  const [publicService, setPublicService] = useState([{ id: 1, name: 'No exposure', unavailable: false }])
+  const noExpose = { id: 1, name: 'No exposure', unavailable: false };
+  const [publicService, setPublicService] = useState([noExpose])
   useEffect(() => {
     async function fetchData() {
       const { success, data } = await publicServiceInstance.listAllPublicServiceInstances();
@@ -55,7 +50,7 @@ export default function AppTemplateDetail() {
           unavailable: false,
         }
       });
-      svc.push({ id: 1, name: 'No exposure', unavailable: false });
+      svc.push(noExpose);
       setPublicService(svc);
     }
     fetchData();
@@ -96,7 +91,7 @@ export default function AppTemplateDetail() {
                   <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                        <QuestionMarkCircleIcon className="h-6 w-6 text-gray-900" aria-hidden="true" />
+                        <QuestionMarkCircleIcon className="h-6 w-6 text-blue-600" aria-hidden="true" />
                       </div>
                       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                         <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
