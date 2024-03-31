@@ -464,7 +464,7 @@ export default function AppInstanceDetail() {
           </div>
         </Panel>
         <Panel title="APP Logs">
-          <div className="bg-neutral-700 text-slate-300 pb-3 pl-3 pr-3 pt-3 h-max text-sm">
+          <div className="bg-neutral-700 text-slate-300 pb-3 pl-3 pr-3 pt-3 h-max text-sm rounded-b-lg">
             {log}
           </div>
         </Panel>

@@ -61,6 +61,9 @@ async function renderMardownDetails(url: string) {
         className="prose prose-zinc text-black max-w-none
           prose-li:pl-0 prose-li:mt-0 prose-li:mb-0
           prose-img:mt-0 prose-img:mb-1 prose-a:text-blue-800
+          prose-h1:border-b prose-h1:border-gray-200 prose-h1:pb-3
+          prose-h2:border-b prose-h2:border-gray-200 prose-h2:pb-3
+          prose-hr:m-6
           prose-img:max-w-full prose-img:flex prose-img:inline-flex"
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}

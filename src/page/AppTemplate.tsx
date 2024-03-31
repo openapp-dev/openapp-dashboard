@@ -4,6 +4,7 @@ import { AppTemplate } from "../types";
 import TemplateCard from "../component/TemplateCard";
 import { useNavigate } from "react-router-dom";
 import { MdSearch } from "react-icons/md";
+import { Loading } from "../component/Loading";
 
 interface State {
   appTemplates: AppTemplate[];
@@ -27,6 +28,8 @@ export default function AppTemplateStore() {
     appTemplates: state.appTemplates,
     keyword: "",
   });
+  const [initialized, setInitialized] = useState<boolean>(false);
+
   useEffect(() => {
     async function fetchData() {
       const { success, message, data } =
@@ -35,6 +38,9 @@ export default function AppTemplateStore() {
         setState({ ...state, loading: false, error: message });
         return;
       }
+
+      await new Promise(f => setTimeout(f, 1000));
+      setInitialized(true);
       setState({ appTemplates: data ?? [], loading: false, error: null });
       setSearchState({...searchState, appTemplates: data ?? []});
     }
@@ -84,22 +90,26 @@ export default function AppTemplateStore() {
           />
         </div>
       </div>
-      {searchState.appTemplates.length === 0 ? (
-        <div className="w-full h-3/4 flex flex-col justify-center items-center">
-          <img className="w-1/4 mx-auto align-middle" src="../../public/404.png" />
-        </div>
+      {initialized ? (
+        searchState.appTemplates.length === 0 ? (
+          <div className="w-full h-3/4 flex flex-col justify-center items-center">
+            <img className="w-1/4 mx-auto align-middle" src="../../public/404.png" />
+          </div>
+        ): (
+          <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
+            {state.appTemplates.map((appTemplate, idx) => (
+              <TemplateCard
+                key={idx}
+                handleCardClick={() => {
+                  handleCardClick(appTemplate);
+                }}
+                {...appTemplate.spec}
+              />
+            ))}
+          </div>
+        )
       ): (
-        <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
-          {state.appTemplates.map((appTemplate, idx) => (
-            <TemplateCard
-              key={idx}
-              handleCardClick={() => {
-                handleCardClick(appTemplate);
-              }}
-              {...appTemplate.spec}
-            />
-          ))}
-        </div>
+        <Loading />
       )}
     </div>
   );
