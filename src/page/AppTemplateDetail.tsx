@@ -2,7 +2,6 @@ import { Button, Divider, Input } from "react-daisyui";
 import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import {
-  DocumentIcon,
   InboxStackIcon,
   QuestionMarkCircleIcon} from '@heroicons/react/24/outline';
 import { useEffect, useState, Fragment, useRef } from "react";
