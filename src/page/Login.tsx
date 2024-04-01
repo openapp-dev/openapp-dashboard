@@ -35,6 +35,7 @@ export default function Login() {
     const { username, password } = state;
     const resp = await login(username, password);
     if (!resp.success) {
+      setShowLoginError(true);
       return;
     }
     if (!resp.data?.token) {
@@ -46,6 +47,7 @@ export default function Login() {
     });
   }
 
+  const [showLoginError, setShowLoginError] = useState<boolean>(false);
   return (
     <div className="h-screen flex items-center lg:justify-end justify-center bg-cover bg-login">
       <div className="flex flex-col w-96 rounded-lg space-y-8 px-4 py-4 lg:mr-48 bg-white">
@@ -53,7 +55,12 @@ export default function Login() {
           <span color="black">Login</span>
           <Avatar src={logo} size="sm" shape="square" />
         </div>
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col space-y-2 ">
+          { showLoginError? (
+            <div className="w-full flex items-center justify-center">
+              <span className="w-full text-red-600 bg-gray-100 pt-2 pb-2 rounded-md mb-3 text-center">Incorrect user name or password</span>
+            </div>
+          ) : (null)}
           <Input
             type="text"
             placeholder="username"
