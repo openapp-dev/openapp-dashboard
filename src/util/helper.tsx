@@ -67,6 +67,14 @@ async function renderMardownDetails(url: string) {
           prose-img:max-w-full prose-img:flex prose-img:inline-flex"
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
+        urlTransform={function (currentUrl, _key, _node) {
+          if (currentUrl.startsWith("http") || url.startsWith("mailto:")) {
+            return currentUrl;
+          }
+          console.log(url);
+          const basePath = url.split("/").slice(0, -1).join("/");
+          return basePath + currentUrl;
+        }}
       >
         {data}
       </Markdown>
