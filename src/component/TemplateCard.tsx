@@ -16,7 +16,7 @@ export default function TemplateCard({
 }: TemplateCardProps) {
   return (
     <div
-      className="flex flex-col space-y-2 sm:p-6 p-4 border border-gray-300 rounded-md hover:border-sky-300 hover:cursor-pointer hover:shadow-md"
+      className="flex flex-col space-y-2 max-w-96 sm:p-6 p-4 border border-gray-300 rounded-md hover:border-sky-300 hover:cursor-pointer hover:shadow-md"
       onClick={handleCardClick}
     >
       <div className="flex flex-col justify-center w-full flex-row">
@@ -26,8 +26,8 @@ export default function TemplateCard({
           ) : (
             <img src={icon} alt={title} className="h-full w-12 border border-gray-300 rounded-md" />
           )}
-          <div className="text-xl font-bold mr-2 absolute right-1/3">
-            <span>{title}</span>
+          <div className="h-full absolute right-0 flex items-center">
+            <span className="text-xl h-full font-bold inline-block align-bottom">{title}</span>
           </div>
         </div>
       </div>
