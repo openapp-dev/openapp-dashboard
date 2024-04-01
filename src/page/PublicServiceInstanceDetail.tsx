@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
-import { AppTemplate, AppInstance, PublicServiceInstance, PublicServiceTemplate } from "../types";
+import { PublicServiceInstance, PublicServiceTemplate } from "../types";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Divider } from "react-daisyui";
 import {
   Cog6ToothIcon,
   RocketLaunchIcon,
   BuildingStorefrontIcon,
-  GlobeAltIcon,
   CheckIcon,
   ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { Menu, Transition, Dialog } from '@headlessui/react'

@@ -2,7 +2,7 @@ import { Button, Divider, Input, Textarea } from "react-daisyui";
 import { Fragment, useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, Transition } from '@headlessui/react'
-import { DocumentCheckIcon } from '@heroicons/react/24/outline'
+import { DocumentCheckIcon, EyeIcon } from '@heroicons/react/24/outline'
 import { setting } from "../api/setting";
 import { OpenAPPConfig } from "../types/config";
 import logo from "/logo.png";
@@ -80,6 +80,7 @@ export default function SettingPage() {
     });
   }
 
+  const [showPassword, setShowPassword] = useState(false);
   return (
     <div className="flex flex-col mt-8">
       <Transition.Root show={open} as={Fragment}>
@@ -169,14 +170,25 @@ export default function SettingPage() {
             </div>
             <div className="flex items-center flex-col sm:flex-row sm:space-x-4 space-y-2">
               <label className="sm:min-w-32">User Password</label>
-              <Input
-                name="password"
-                size="md"
-                className="w-full focus:outline-blue-500"
-                type="password"
-                value={state.openappConfig.password}
-                onChange={handleFormChange}
-              />
+              <div className="relative w-full">
+                <Input
+                  name="password"
+                  size="md"
+                  className="w-full focus:outline-blue-500"
+                  type={
+                    showPassword ? "text" : "password"
+                  }
+                  value={state.openappConfig.password}
+                  onChange={handleFormChange}
+                />
+                <div className="absolute inset-y-0 right-3 flex items-center ps-3 cursor-pointer">
+                  <EyeIcon
+                    className="w-6 h-6 text-gray-400 hover:text-sky-600"
+                    onMouseDown={() => setShowPassword(true)}
+                    onMouseUp={() => setShowPassword(false)}
+                  />
+                </div>
+              </div>
             </div>
             <div className="flex items-center flex-col sm:flex-row sm:space-x-4 space-y-2">
               <label className="sm:min-w-32">Registry</label>
