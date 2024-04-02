@@ -26,8 +26,8 @@ export default function TemplateCard({
           ) : (
             <img src={icon} alt={title} className="h-full w-12 border border-gray-300 rounded-md" />
           )}
-          <div className="h-full absolute right-0 flex items-center">
-            <span className="text-xl h-full font-bold inline-block align-bottom">{title}</span>
+          <div className="h-full absolute right-0 flex items-end">
+            <span className="text-xl font-bold inline-block align-bottom">{title}</span>
           </div>
         </div>
       </div>
