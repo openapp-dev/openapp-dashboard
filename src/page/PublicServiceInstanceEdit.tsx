@@ -1,28 +1,27 @@
 import { Link } from "react-router-dom";
-import { AppTemplate, AppInstance } from "../types";
+import { PublicServiceInstance, PublicServiceTemplate } from "../types";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Divider } from "react-daisyui";
 import {
   CheckIcon,
-  ChevronUpDownIcon,
   InboxStackIcon,
   QuestionMarkCircleIcon} from '@heroicons/react/24/outline'
-import { Transition, Dialog, Listbox } from '@headlessui/react'
+import { Transition, Dialog } from '@headlessui/react'
 import { Fragment, useRef, useEffect, useState } from 'react'
 
 import Panel from "../component/Panel";
-import { appInstance, appTemplate, publicServiceInstance } from "../api";
+import { publicServiceInstance, publicServiceTemplate } from "../api";
 import { renderMardownDetails } from "../util/helper";
 import { Loading } from "../component/Loading";
 
 interface State {
-  instance: AppInstance | null;
-  template: AppTemplate | null;
+  instance: PublicServiceInstance | null;
+  template: PublicServiceTemplate | null;
   loading: boolean;
   error: string | null;
 }
 
-export default function AppInstanceEdit() {
+export default function PublicServiceInstanceEdit() {
   const location = useLocation();
   const instanceName = location.state.name;
 
@@ -35,20 +34,20 @@ export default function AppInstanceEdit() {
   });
 
   let emptyDetails = (<Loading />);
-  const [appDetails, setAppDetails] = useState<JSX.Element>(emptyDetails);
+  const [details, setDetails] = useState<JSX.Element>(emptyDetails);
   useEffect(() => {
     async function fetchData() {
       const instance  =
-        await appInstance.getAppInstance(instanceName);
+        await publicServiceInstance.getPublicServiceInstance(instanceName);
       if (!instance.success) {
         setState({ ...state, loading: false, error: instance.message });
         return;
       }
-      let templateName =  instance.data?.spec.appTemplate?? "";
+      let templateName =  instance.data?.spec.publicServiceTemplate?? "";
       if (templateName === "") {
         return;
       }
-      const template = await appTemplate.getAppTemplate(templateName);
+      const template = await publicServiceTemplate.getPublicServiceTemplate(templateName);
       if (!template.success) {
         setState({ ...state, loading: false, error: template.message });
         return;
@@ -60,13 +59,12 @@ export default function AppInstanceEdit() {
         loading: false,
         error: null,
       });
-      setAppDetails(await renderMardownDetails(template.data?.spec.url ?? ""));
+      setDetails(await renderMardownDetails(template.data?.spec.url ?? ""));
     }
     fetchData();
   }, []);
 
   const noExpose = { id: 1, name: 'No exposure', unavailable: false };
-  const [publicService, setPublicService] = useState([noExpose])
   useEffect(() => {
     async function fetchData() {
       const { success, data } = await publicServiceInstance.listAllPublicServiceInstances();
@@ -82,7 +80,6 @@ export default function AppInstanceEdit() {
         }
       });
       svc.push(noExpose);
-      setPublicService(svc);
     }
     fetchData();
   }, []);
@@ -94,7 +91,6 @@ export default function AppInstanceEdit() {
   const [saveNotificationOpen, setSaveNotificationOpen] = useState(false);
   const [saveResultOpen, setSaveResultOpen] = useState(false);
   const cancelButtonRef = useRef(null);
-  const [selected, setSelected] = useState(publicService[0]);
   return (
     <div className="flex flex-col">
       <Transition.Root show={saveResultOpen} as={Fragment}>
@@ -130,11 +126,11 @@ export default function AppInstanceEdit() {
                       </div>
                       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                         <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
-                          APP updated
+                          Public Service updated
                         </Dialog.Title>
                         <div className="mt-2">
                           <p className="text-sm text-gray-900">
-                            APP has been updated successfully.
+                            Public Service has been updated successfully.
                           </p>
                         </div>
                       </div>
@@ -146,7 +142,7 @@ export default function AppInstanceEdit() {
                       className="bg-sky-600 hover:bg-sky-700 mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm ring-none sm:mt-0 sm:w-auto"
                       onClick={() => {
                           setSaveResultOpen(false);
-                          navigate("/instance/app/detail", {
+                          navigate("/instance/publicservice/detail", {
                             state: { name: state.instance?.metadata.name }
                           });
                         }
@@ -195,11 +191,11 @@ export default function AppInstanceEdit() {
                       </div>
                       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left text-gray-700">
                         <Dialog.Title as="h3" className="text-base font-semibold leading-6">
-                          Update APP
+                          Update Public Service
                         </Dialog.Title>
                         <div className="mt-2">
                           <p className="text-sm">
-                            Are you sure to update APP {state.instance?.metadata.name}?
+                            Are you sure to update Public Service {state.instance?.metadata.name}?
                           </p>
                         </div>
                       </div>
@@ -234,7 +230,7 @@ export default function AppInstanceEdit() {
       </Transition.Root>
       <div className="flex space-x-1">
         <span className="text-gray-500">
-          <Link to="/instance/app">APP instance</Link>
+          <Link to="/instance/app">Public Service instance</Link>
         </span>
         <span>/ Edit</span>
         <span className="font-bold">{state.instance?.metadata.name}</span>
@@ -244,7 +240,7 @@ export default function AppInstanceEdit() {
         <div className="flex md:space-x-4 md:flex-row flex-col space-y-2">
           <div className="flex-none w-24 h-24 rounded-md p-2 border border-gray-300">
             {state.template?.spec.icon === "" ? (
-              <span className="text-lg font-bold">
+              <span className="font-bold w-full h-full text-5xl flex justify-center items-center">
                 {state.template?.spec.title[0].toUpperCase()}
               </span>
             ) : (
@@ -268,64 +264,11 @@ export default function AppInstanceEdit() {
         </div>
         <Panel title="Configuration">
           <div className="flex flex-col p-2 space-y-2">
-            <div className="flex items-center flex-col sm:flex-row sm:space-x-4 space-y-2">
-              <label className="sm:min-w-64">Public Service</label>
-              <Listbox value={selected} onChange={setSelected}>
-                <div className="relative mt-1 sm:w-96 w-full">
-                  <Listbox.Button className="relative w-full cursor-default text-white rounded-lg bg-sky-600 py-2 pl-3 pr-10 text-left shadow-none focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300">
-                    <span className="block truncate">{selected.name}</span>
-                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                      <ChevronUpDownIcon
-                        className="h-5 w-5 text-white"
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </Listbox.Button>
-                  <Transition
-                    as={Fragment}
-                    leave="transition ease-in duration-100"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-x-auto	 rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-                      {publicService.map((svc, svcIndex) => (
-                        <Listbox.Option
-                          key={svcIndex}
-                          className={({ active }) =>
-                            `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                              active ? 'bg-sky-600 text-white rounded-lg' : 'text-gray-900'
-                            }`
-                          }
-                          value={svc}
-                        >
-                          {({ selected }) => (
-                            <>
-                              <span
-                                className={`block truncate ${
-                                  selected ? 'font-medium' : 'font-normal'
-                                }`}
-                              >
-                                {svc.name}
-                              </span>
-                              {selected ? (
-                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
-                                  <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                                </span>
-                              ) : null}
-                            </>
-                          )}
-                        </Listbox.Option>
-                      ))}
-                    </Listbox.Options>
-                  </Transition>
-                </div>
-              </Listbox>
-            </div>
           </div>
         </Panel>
         <Panel title="APP details">
             <div className="pl-3 pr-3 pt-3">
-                {appDetails}
+                {details}
             </div>
         </Panel>
       </div>
