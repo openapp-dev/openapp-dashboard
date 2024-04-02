@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Divider } from "react-daisyui";
 import {
   CheckIcon,
+  DocumentTextIcon,
   InboxStackIcon,
   QuestionMarkCircleIcon} from '@heroicons/react/24/outline'
 import { Transition, Dialog } from '@headlessui/react'
@@ -91,6 +92,7 @@ export default function PublicServiceInstanceEdit() {
   const [saveNotificationOpen, setSaveNotificationOpen] = useState(false);
   const [saveResultOpen, setSaveResultOpen] = useState(false);
   const cancelButtonRef = useRef(null);
+  console.log(state.template?.spec.inputs);
   return (
     <div className="flex flex-col">
       <Transition.Root show={saveResultOpen} as={Fragment}>
@@ -264,6 +266,14 @@ export default function PublicServiceInstanceEdit() {
         </div>
         <Panel title="Configuration">
           <div className="flex flex-col p-2 space-y-2">
+            {state.template?.spec.inputs === "" ? (
+              <div className="w-full flex flex-col justify-center items-center">
+                <DocumentTextIcon className="w-8 mt-10 mb-4 text-gray-500" />
+                <span className="text-gray-500 font-medium mb-10">No configuration required</span>
+              </div>
+            ) : (
+              null
+            )}
           </div>
         </Panel>
         <Panel title="APP details">
