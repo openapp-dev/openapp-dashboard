@@ -92,7 +92,6 @@ export default function PublicServiceInstanceEdit() {
   const [saveNotificationOpen, setSaveNotificationOpen] = useState(false);
   const [saveResultOpen, setSaveResultOpen] = useState(false);
   const cancelButtonRef = useRef(null);
-  console.log(state.template?.spec.inputs);
   return (
     <div className="flex flex-col">
       <Transition.Root show={saveResultOpen} as={Fragment}>
