@@ -156,7 +156,7 @@ export default function PublicServiceTemplateDetail() {
             {Object.entries(inputs).map(renderFormField)}
           </div>
         </Panel>
-        <Panel title="APP details">
+        <Panel title="Public Service details">
           <div className="pl-3 pr-3 pt-3">
             {publicServiceDetails}
           </div>

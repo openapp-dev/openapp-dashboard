@@ -320,7 +320,7 @@ export default function PublicServiceInstanceDetail() {
       </Transition.Root>
       <div className="flex space-x-1">
         <span className="text-gray-500">
-          <Link to="/instance/app">APP instance</Link>
+          <Link to="/instance/app">Public Service instance</Link>
         </span>
         <span>/</span>
         <span className="font-bold">{state.instance?.metadata.name}</span>
