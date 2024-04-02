@@ -371,6 +371,11 @@ export default function AppInstanceDetail() {
                           className={`${
                             active ? 'bg-sky-600 text-white' : 'text-gray-900'
                           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                          onClick={() => {
+                            navigate("/instance/app/edit", {
+                              state: {name: state.appInstance?.metadata.name},
+                            });
+                          }}
                         >
                           {active ? (
                             <EditActiveIcon
