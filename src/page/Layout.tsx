@@ -91,9 +91,10 @@ export default function Layout() {
         <div className="flex flex-row h-screen">
           <div className="w-1/5 min-w-56 xl:flex hidden border-r border-gray-300 bg-sky-200 flex-col justify-between">
             <OpenAppMenu />
-            <div className="flex flex-row items-center justify-center space-x-2 mb-4">
+            <div className="flex flex-row items-center space-x-2 mb-4">
               <Button
                 size="sm"
+                className="ml-2"
                 color="ghost"
                 onClick={() => {
                   window.open("https://github.com/openapp-dev/openapp");
@@ -101,7 +102,7 @@ export default function Layout() {
               >
                 <BsGithub className="w-5 h-5" />
               </Button>
-              <span className="text-xs">OpenAPP version: {openVersion}</span>
+              <span className="text-xs ">Version: {openVersion}</span>
             </div>
           </div>
           <div className="w-full overflow-y-scroll overflow-x-hidden xl:px-4 px-2 flex flex-col">
