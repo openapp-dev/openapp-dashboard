@@ -71,7 +71,6 @@ async function renderMardownDetails(url: string) {
           if (currentUrl.startsWith("http") || url.startsWith("mailto:")) {
             return currentUrl;
           }
-          console.log(url);
           const basePath = url.split("/").slice(0, -1).join("/");
           return basePath + currentUrl;
         }}
