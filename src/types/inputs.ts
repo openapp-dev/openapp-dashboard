@@ -1,12 +1,13 @@
 interface InputField {
-  name: string;
-  type: string;
+  type: "string" | "number" | "boolean" | "array" | "object";
   required: boolean;
   description: string;
+  default?: string | number | boolean;
+  items?: {
+    type: "string" | "number" | "boolean" | "array" | "object";
+    properties?: Record<string, InputField>;
+  };
+  properties?: Record<string, InputField>;
 }
 
-interface Inputs {
-  [key: string]: InputField;
-}
-
-export type { InputField, Inputs };
+export type { InputField };
