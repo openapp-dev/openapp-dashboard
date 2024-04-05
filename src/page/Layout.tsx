@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { Outlet } from "react-router";
+import { Link } from "react-router-dom";
 import { Button, Divider, Drawer, Menu } from "react-daisyui";
 import {
   MdApps,
@@ -8,11 +10,9 @@ import {
   MdMenu,
   MdSettings,
 } from "react-icons/md";
-import { Outlet } from "react-router";
-import { Link } from "react-router-dom";
-import { RequireAuth } from "../component/AuthProvider";
 import { BsGithub } from "react-icons/bs";
 import { version } from "../api";
+import { RequireAuth } from "../component/AuthProvider";
 
 function OpenAppMenu() {
   return (

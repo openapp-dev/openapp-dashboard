@@ -1,19 +1,18 @@
-import { Link } from "react-router-dom";
-import { AppTemplate, AppInstance } from "../types";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Fragment, useRef, useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Divider } from "react-daisyui";
 import {
   CheckIcon,
   ChevronUpDownIcon,
   InboxStackIcon,
-  QuestionMarkCircleIcon} from '@heroicons/react/24/outline'
-import { Transition, Dialog, Listbox } from '@headlessui/react'
-import { Fragment, useRef, useEffect, useState } from 'react'
+  QuestionMarkCircleIcon,
+} from "@heroicons/react/24/outline";
+import { Transition, Dialog, Listbox } from "@headlessui/react";
+import { appInstance, appTemplate, publicServiceInstance } from "../api";
+import { AppTemplate, AppInstance } from "../types";
 
 import Panel from "../component/Panel";
-import { appInstance, appTemplate, publicServiceInstance } from "../api";
 import TemplateMarkdown from "../component/TemplateMarkdown";
-import { Loading } from "../component/Loading";
 
 interface State {
   instance: AppInstance | null;
@@ -34,17 +33,14 @@ export default function AppInstanceEdit() {
     error: null,
   });
 
-  let emptyDetails = (<Loading />);
-  const [appDetails, setAppDetails] = useState<JSX.Element>(emptyDetails);
   useEffect(() => {
     async function fetchData() {
-      const instance  =
-        await appInstance.getAppInstance(instanceName);
+      const instance = await appInstance.getAppInstance(instanceName);
       if (!instance.success) {
         setState({ ...state, loading: false, error: instance.message });
         return;
       }
-      let templateName =  instance.data?.spec.appTemplate?? "";
+      let templateName = instance.data?.spec.appTemplate ?? "";
       if (templateName === "") {
         return;
       }
@@ -60,18 +56,16 @@ export default function AppInstanceEdit() {
         loading: false,
         error: null,
       });
-      setAppDetails(TemplateMarkdown({
-        url: template.data?.spec.url ?? "",
-      }));
     }
     fetchData();
   }, []);
 
-  const noExpose = { id: 1, name: 'No exposure', unavailable: false };
-  const [publicService, setPublicService] = useState([noExpose])
+  const noExpose = { id: 1, name: "No exposure", unavailable: false };
+  const [publicService, setPublicService] = useState([noExpose]);
   useEffect(() => {
     async function fetchData() {
-      const { success, data } = await publicServiceInstance.listAllPublicServiceInstances();
+      const { success, data } =
+        await publicServiceInstance.listAllPublicServiceInstances();
       if (!success) {
         return;
       }
@@ -81,7 +75,7 @@ export default function AppInstanceEdit() {
           id: 1,
           name: item.metadata.name ?? "",
           unavailable: false,
-        }
+        };
       });
       svc.push(noExpose);
       setPublicService(svc);
@@ -100,7 +94,12 @@ export default function AppInstanceEdit() {
   return (
     <div className="flex flex-col">
       <Transition.Root show={saveResultOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setSaveResultOpen}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          initialFocus={cancelButtonRef}
+          onClose={setSaveResultOpen}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -128,10 +127,16 @@ export default function AppInstanceEdit() {
                   <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                        <CheckIcon className="h-6 w-6 text-blue-600" aria-hidden="true" />
+                        <CheckIcon
+                          className="h-6 w-6 text-blue-600"
+                          aria-hidden="true"
+                        />
                       </div>
                       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                        <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
+                        <Dialog.Title
+                          as="h3"
+                          className="text-base font-semibold leading-6 text-gray-900"
+                        >
                           APP updated
                         </Dialog.Title>
                         <div className="mt-2">
@@ -147,12 +152,11 @@ export default function AppInstanceEdit() {
                       type="button"
                       className="bg-sky-600 hover:bg-sky-700 mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm ring-none sm:mt-0 sm:w-auto"
                       onClick={() => {
-                          setSaveResultOpen(false);
-                          navigate("/instance/app/detail", {
-                            state: { name: state.instance?.metadata.name }
-                          });
-                        }
-                      }
+                        setSaveResultOpen(false);
+                        navigate("/instance/app/detail", {
+                          state: { name: state.instance?.metadata.name },
+                        });
+                      }}
                       ref={cancelButtonRef}
                     >
                       OK
@@ -165,7 +169,12 @@ export default function AppInstanceEdit() {
         </Dialog>
       </Transition.Root>
       <Transition.Root show={saveNotificationOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setSaveNotificationOpen}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          initialFocus={cancelButtonRef}
+          onClose={setSaveNotificationOpen}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -193,15 +202,22 @@ export default function AppInstanceEdit() {
                   <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                        <QuestionMarkCircleIcon className="h-6 w-6 text-sky-600" aria-hidden="true" />
+                        <QuestionMarkCircleIcon
+                          className="h-6 w-6 text-sky-600"
+                          aria-hidden="true"
+                        />
                       </div>
                       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left text-gray-700">
-                        <Dialog.Title as="h3" className="text-base font-semibold leading-6">
+                        <Dialog.Title
+                          as="h3"
+                          className="text-base font-semibold leading-6"
+                        >
                           Update APP
                         </Dialog.Title>
                         <div className="mt-2">
                           <p className="text-sm">
-                            Are you sure to update APP {state.instance?.metadata.name}?
+                            Are you sure to update APP{" "}
+                            {state.instance?.metadata.name}?
                           </p>
                         </div>
                       </div>
@@ -213,8 +229,7 @@ export default function AppInstanceEdit() {
                       className="ml-3 bg-red-500 hover:bg-red-600 mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm ring-none sm:mt-0 sm:w-auto"
                       onClick={() => {
                         setSaveResultOpen(true);
-                        }
-                      }
+                      }}
                       ref={cancelButtonRef}
                     >
                       Yes
@@ -258,12 +273,19 @@ export default function AppInstanceEdit() {
             )}
           </div>
           <div className="flex-1 flex-col space-y-1">
-            <div className="text-2xl font-bold">{state.instance?.metadata.name}</div>
-            <div className="text-sm">Powered by {state.template?.metadata.name}</div>
+            <div className="text-2xl font-bold">
+              {state.instance?.metadata.name}
+            </div>
+            <div className="text-sm">
+              Powered by {state.template?.metadata.name}
+            </div>
             <div className="text-sm">{state.template?.spec.description}</div>
           </div>
           <div className="flex-none">
-            <Button className="px-4 py-2 bg-sky-600 hover:bg-sky-700 rounded-md" onClick={() => setSaveNotificationOpen(true)}>
+            <Button
+              className="px-4 py-2 bg-sky-600 hover:bg-sky-700 rounded-md"
+              onClick={() => setSaveNotificationOpen(true)}
+            >
               <InboxStackIcon className="h-6 w-6 text-white" />
             </Button>
           </div>
@@ -295,7 +317,9 @@ export default function AppInstanceEdit() {
                           key={svcIndex}
                           className={({ active }) =>
                             `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                              active ? 'bg-sky-600 text-white rounded-lg' : 'text-gray-900'
+                              active
+                                ? "bg-sky-600 text-white rounded-lg"
+                                : "text-gray-900"
                             }`
                           }
                           value={svc}
@@ -304,14 +328,17 @@ export default function AppInstanceEdit() {
                             <>
                               <span
                                 className={`block truncate ${
-                                  selected ? 'font-medium' : 'font-normal'
+                                  selected ? "font-medium" : "font-normal"
                                 }`}
                               >
                                 {svc.name}
                               </span>
                               {selected ? (
                                 <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
-                                  <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                  <CheckIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
                                 </span>
                               ) : null}
                             </>
@@ -326,9 +353,9 @@ export default function AppInstanceEdit() {
           </div>
         </Panel>
         <Panel title="APP details">
-            <div className="pl-3 pr-3 pt-3">
-                {appDetails}
-            </div>
+          <div className="pl-3 pr-3 pt-3">
+            <TemplateMarkdown url={state.template?.spec.url ?? ""} />
+          </div>
         </Panel>
       </div>
     </div>

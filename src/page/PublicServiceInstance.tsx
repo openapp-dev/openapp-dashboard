@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { publicServiceInstance } from "../api/publicserviceinstance";
-import { PublicServiceInstance } from "../types/publicserviceinstance";
-import { PublicServiceInstanceCard } from "../component/InstanceCard";
 import { MdSearch } from "react-icons/md";
-import { PublicServiceTemplate } from "../types";
-import { publicServiceTemplate } from "../api";
-import { Loading } from "../component/Loading";
+import { publicServiceInstance, publicServiceTemplate } from "../api";
+import { PublicServiceTemplate, PublicServiceInstance } from "../types";
+
+import { PublicServiceInstanceCard } from "../component/InstanceCard";
+import Loading from "../component/Loading";
 
 interface State {
   publicServiceInstances: PublicServiceInstance[];
@@ -40,9 +39,14 @@ export default function PublicServiceInstancePage() {
         setState({ ...state, loading: false, error: message });
         return;
       }
-      const publicServiceTemplates = await publicServiceTemplate.listAllPublicServiceTemplates();
+      const publicServiceTemplates =
+        await publicServiceTemplate.listAllPublicServiceTemplates();
       if (!publicServiceTemplates.success) {
-        setState({ ...state, loading: false, error: publicServiceTemplates.message });
+        setState({
+          ...state,
+          loading: false,
+          error: publicServiceTemplates.message,
+        });
         return;
       }
       const templateMap: { [key: string]: PublicServiceTemplate } = {};
@@ -52,7 +56,7 @@ export default function PublicServiceInstancePage() {
           templateMap[templateName] = template;
         }
       });
-      await new Promise(f => setTimeout(f, 1000));
+      await new Promise((f) => setTimeout(f, 1000));
       setInitialized(true);
       setState({
         publicServiceInstances: data ?? [],
@@ -63,17 +67,23 @@ export default function PublicServiceInstancePage() {
       setSearchState({ ...searchState, instances: data ?? [] });
     }
     fetchData();
-
   }, []);
 
   useEffect(() => {
     if (searchState.keyword === "" || searchState.keyword === undefined) {
-      setSearchState({ ...searchState, instances: state.publicServiceInstances });
-    } else {
-      const filteredInstances = state.publicServiceInstances.filter((instance) => {
-        let instanceName = instance.metadata.name?? "";
-        return instanceName.toLowerCase().startsWith(searchState.keyword.toLowerCase());
+      setSearchState({
+        ...searchState,
+        instances: state.publicServiceInstances,
       });
+    } else {
+      const filteredInstances = state.publicServiceInstances.filter(
+        (instance) => {
+          let instanceName = instance.metadata.name ?? "";
+          return instanceName
+            .toLowerCase()
+            .startsWith(searchState.keyword.toLowerCase());
+        }
+      );
       setSearchState({ ...searchState, instances: filteredInstances });
     }
   }, [searchState.keyword]);
@@ -105,18 +115,23 @@ export default function PublicServiceInstancePage() {
       {initialized ? (
         searchState.instances.length === 0 ? (
           <div className="w-full h-3/4 flex flex-col justify-center items-center">
-            <img className="w-1/4 mx-auto align-middle" src="../../public/404.png" />
+            <img
+              className="w-1/4 mx-auto align-middle"
+              src="../../public/404.png"
+            />
           </div>
         ) : (
           <div className="grid xl:grid-cols-8 md:grid-cols-4 grid-cols-2 gap-4">
             {searchState.instances.map((instance, idx) => (
               <PublicServiceInstanceCard
                 key={idx}
-                title={instance.metadata.name ?? ""} icon={""} />
+                title={instance.metadata.name ?? ""}
+                icon={""}
+              />
             ))}
           </div>
         )
-      ): (
+      ) : (
         <Loading></Loading>
       )}
     </div>

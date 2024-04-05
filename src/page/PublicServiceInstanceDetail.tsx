@@ -1,19 +1,17 @@
-import { Link } from "react-router-dom";
-import { PublicServiceInstance, PublicServiceTemplate } from "../types";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Fragment, useRef, ReactElement, useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Divider } from "react-daisyui";
 import {
   Cog6ToothIcon,
   RocketLaunchIcon,
   BuildingStorefrontIcon,
   CheckIcon,
-  ExclamationTriangleIcon } from '@heroicons/react/24/outline'
-import { Menu, Transition, Dialog } from '@headlessui/react'
-import { Fragment, useRef, ReactElement, useEffect, useState } from 'react'
-
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
+import { Menu, Transition, Dialog } from "@headlessui/react";
+import { publicServiceInstance, publicServiceTemplate, logs } from "../api";
+import { PublicServiceInstance, PublicServiceTemplate } from "../types";
 import Panel from "../component/Panel";
-import { publicServiceInstance, publicServiceTemplate } from "../api";
-import { logs } from "../api/logs"
 
 interface State {
   instance: PublicServiceInstance | null;
@@ -45,7 +43,7 @@ export default function PublicServiceInstanceDetail() {
           strokeWidth="2"
         />
       </svg>
-    )
+    );
   }
 
   function EditActiveIcon(props: MenuProps) {
@@ -63,7 +61,7 @@ export default function PublicServiceInstanceDetail() {
           strokeWidth="2"
         />
       </svg>
-    )
+    );
   }
 
   function DeleteInactiveIcon(props: MenuProps) {
@@ -86,7 +84,7 @@ export default function PublicServiceInstanceDetail() {
         <path d="M3 6H17" stroke="#A78BFA" strokeWidth="2" />
         <path d="M8 6V4H12V6" stroke="#A78BFA" strokeWidth="2" />
       </svg>
-    )
+    );
   }
 
   function DeleteActiveIcon(props: MenuProps) {
@@ -109,7 +107,7 @@ export default function PublicServiceInstanceDetail() {
         <path d="M3 6H17" stroke="#C4B5FD" strokeWidth="2" />
         <path d="M8 6V4H12V6" stroke="#C4B5FD" strokeWidth="2" />
       </svg>
-    )
+    );
   }
 
   async function handleDeleteInstance() {
@@ -136,17 +134,20 @@ export default function PublicServiceInstanceDetail() {
 
   useEffect(() => {
     async function fetchData() {
-      const instance  =
-        await publicServiceInstance.getPublicServiceInstance(instanceName);
+      const instance = await publicServiceInstance.getPublicServiceInstance(
+        instanceName
+      );
       if (!instance.success) {
         setState({ ...state, loading: false, error: instance.message });
         return;
       }
-      let templateName =  instance.data?.spec.publicServiceTemplate?? "";
+      let templateName = instance.data?.spec.publicServiceTemplate ?? "";
       if (templateName === "") {
         return;
       }
-      const template = await publicServiceTemplate.getPublicServiceTemplate(templateName);
+      const template = await publicServiceTemplate.getPublicServiceTemplate(
+        templateName
+      );
       if (!template.success) {
         setState({ ...state, loading: false, error: template.message });
         return;
@@ -164,8 +165,9 @@ export default function PublicServiceInstanceDetail() {
         setState({ ...state, loading: false, error: logGet.message });
         return;
       }
-      let logDetail = (logGet.data ?? "").split('\n').map((line, _) => (
-        <Fragment>{line}
+      let logDetail = (logGet.data ?? "").split("\n").map((line, _) => (
+        <Fragment>
+          {line}
           <br />
         </Fragment>
       ));
@@ -185,7 +187,12 @@ export default function PublicServiceInstanceDetail() {
   return (
     <div className="flex flex-col">
       <Transition.Root show={deleteResultOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setDeleteResultOpen}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          initialFocus={cancelButtonRef}
+          onClose={setDeleteResultOpen}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -213,10 +220,16 @@ export default function PublicServiceInstanceDetail() {
                   <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                        <CheckIcon className="h-6 w-6 text-blue-600" aria-hidden="true" />
+                        <CheckIcon
+                          className="h-6 w-6 text-blue-600"
+                          aria-hidden="true"
+                        />
                       </div>
                       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                        <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
+                        <Dialog.Title
+                          as="h3"
+                          className="text-base font-semibold leading-6 text-gray-900"
+                        >
                           APP deleted
                         </Dialog.Title>
                         <div className="mt-2">
@@ -232,10 +245,9 @@ export default function PublicServiceInstanceDetail() {
                       type="button"
                       className="bg-sky-600 hover:bg-sky-700 mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm ring-none sm:mt-0 sm:w-auto"
                       onClick={() => {
-                          setDeleteResultOpen(false);
-                          navigate("/instance/app");
-                        }
-                      }
+                        setDeleteResultOpen(false);
+                        navigate("/instance/app");
+                      }}
                       ref={cancelButtonRef}
                     >
                       OK
@@ -248,7 +260,12 @@ export default function PublicServiceInstanceDetail() {
         </Dialog>
       </Transition.Root>
       <Transition.Root show={deleteWaringOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setDeleteWaringOpen}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          initialFocus={cancelButtonRef}
+          onClose={setDeleteWaringOpen}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -276,15 +293,22 @@ export default function PublicServiceInstanceDetail() {
                   <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                        <ExclamationTriangleIcon className="h-6 w-6 text-red-700" aria-hidden="true" />
+                        <ExclamationTriangleIcon
+                          className="h-6 w-6 text-red-700"
+                          aria-hidden="true"
+                        />
                       </div>
                       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                        <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-red-700">
+                        <Dialog.Title
+                          as="h3"
+                          className="text-base font-semibold leading-6 text-red-700"
+                        >
                           Waring
                         </Dialog.Title>
                         <div className="mt-2">
                           <p className="text-sm text-red-700">
-                            Are you sure to delete Public Service {state.instance?.metadata.name}?
+                            Are you sure to delete Public Service{" "}
+                            {state.instance?.metadata.name}?
                           </p>
                         </div>
                       </div>
@@ -295,10 +319,9 @@ export default function PublicServiceInstanceDetail() {
                       type="button"
                       className="ml-3 bg-red-500 hover:bg-red-600 mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm ring-none sm:mt-0 sm:w-auto"
                       onClick={() => {
-                          setDeleteWaringOpen(false);
-                          handleDeleteInstance();
-                        }
-                      }
+                        setDeleteWaringOpen(false);
+                        handleDeleteInstance();
+                      }}
                       ref={cancelButtonRef}
                     >
                       Yes
@@ -342,12 +365,19 @@ export default function PublicServiceInstanceDetail() {
             )}
           </div>
           <div className="flex-1 flex-col space-y-1">
-            <div className="text-2xl font-bold">{state.instance?.metadata.name}</div>
-            <div className="text-sm">Powered by {state.template?.metadata.name}</div>
+            <div className="text-2xl font-bold">
+              {state.instance?.metadata.name}
+            </div>
+            <div className="text-sm">
+              Powered by {state.template?.metadata.name}
+            </div>
             <div className="text-sm">{state.template?.spec.description}</div>
           </div>
           <div className="flex-none">
-            <Menu as="div" className="inline-block text-left rounded-md bg-sky-600 hover:bg-sky-700">
+            <Menu
+              as="div"
+              className="inline-block text-left rounded-md bg-sky-600 hover:bg-sky-700"
+            >
               <div>
                 <Menu.Button className="inline-flex w-full justify-center rounded-md bg-black/20 px-4 py-2 text-sm font-medium text-white hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
                   <Cog6ToothIcon className="h-6 w-6"></Cog6ToothIcon>
@@ -368,11 +398,11 @@ export default function PublicServiceInstanceDetail() {
                       {({ active }) => (
                         <button
                           className={`${
-                            active ? 'bg-sky-600 text-white' : 'text-gray-900'
+                            active ? "bg-sky-600 text-white" : "text-gray-900"
                           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                           onClick={() => {
                             navigate("/instance/publicservice/edit", {
-                              state: {name: state.instance?.metadata.name},
+                              state: { name: state.instance?.metadata.name },
                             });
                           }}
                         >
@@ -397,7 +427,7 @@ export default function PublicServiceInstanceDetail() {
                       {({ active }) => (
                         <button
                           className={`${
-                            active ? 'bg-sky-600 text-white' : 'text-gray-900'
+                            active ? "bg-sky-600 text-white" : "text-gray-900"
                           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                           onClick={() => setDeleteWaringOpen(true)}
                         >
@@ -428,21 +458,23 @@ export default function PublicServiceInstanceDetail() {
               <label className="sm:min-w-8">
                 <RocketLaunchIcon className="w-5 mt-1 text-sky-600"></RocketLaunchIcon>
               </label>
-              <label className="sm:min-w-60">
-                Ready
-              </label>
-              <span>{state.instance?.status.publicServiceReady ? "Yes" : "No"}</span>
+              <label className="sm:min-w-60">Ready</label>
+              <span>
+                {state.instance?.status.publicServiceReady ? "Yes" : "No"}
+              </span>
             </div>
             <div className="flex items-center flex-col sm:flex-row sm:space-x-1 space-y-2">
               <label className="sm:min-w-8">
                 <BuildingStorefrontIcon className="w-5 mt-1 text-sky-600"></BuildingStorefrontIcon>
               </label>
-              <label className="sm:min-w-60">
-                Local link
-              </label>
+              <label className="sm:min-w-60">Local link</label>
               <Link
                 className="text-blue-500 hover:text-blue-800"
-                to={state.instance?.status.localServiceURL? state.instance?.status.localServiceURL : ""}
+                to={
+                  state.instance?.status.localServiceURL
+                    ? state.instance?.status.localServiceURL
+                    : ""
+                }
                 target="_blank"
                 rel="noopener noreferrer"
               >

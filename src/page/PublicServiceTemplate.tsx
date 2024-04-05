@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { publicServiceTemplate } from "../api/publicservicetemplate";
-import { PublicServiceTemplate } from "../types";
-import TemplateCard from "../component/TemplateCard";
 import { useNavigate } from "react-router-dom";
 import { MdSearch } from "react-icons/md";
-import { Loading } from "../component/Loading";
+import { publicServiceTemplate } from "../api";
+import { PublicServiceTemplate } from "../types";
+import TemplateCard from "../component/TemplateCard";
+import Loading from "../component/Loading";
+import NotFound from "../component/NotFound";
 
 interface State {
   publicServiceTemplates: PublicServiceTemplate[];
@@ -28,7 +29,6 @@ export default function PublicServiceTemplateStore() {
     publicServiceTemplates: state.publicServiceTemplates,
     keyword: "",
   });
-  const [initialized, setInitialized] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -43,23 +43,29 @@ export default function PublicServiceTemplateStore() {
         loading: false,
         error: null,
       });
-
-      await new Promise(f => setTimeout(f, 1000));
-      setInitialized(true);
-      setSearchState({...searchState, publicServiceTemplates: data ?? []});
+      setSearchState({ ...searchState, publicServiceTemplates: data ?? [] });
     }
     fetchData();
   }, []);
 
   useEffect(() => {
     if (searchState.keyword === "" || searchState.keyword === undefined) {
-      setSearchState({ ...searchState, publicServiceTemplates: state.publicServiceTemplates });
-    } else {
-      const filteredPublicServiceTemplates = state.publicServiceTemplates.filter((template) => {
-        let name = template.metadata.name?? "";
-        return name.toLowerCase().startsWith(searchState.keyword.toLowerCase());
+      setSearchState({
+        ...searchState,
+        publicServiceTemplates: state.publicServiceTemplates,
       });
-      setSearchState({ ...searchState, publicServiceTemplates: filteredPublicServiceTemplates });
+    } else {
+      const filteredPublicServiceTemplates =
+        state.publicServiceTemplates.filter((template) => {
+          let name = template.metadata.name ?? "";
+          return name
+            .toLowerCase()
+            .startsWith(searchState.keyword.toLowerCase());
+        });
+      setSearchState({
+        ...searchState,
+        publicServiceTemplates: filteredPublicServiceTemplates,
+      });
     }
   }, [searchState.keyword]);
 
@@ -94,12 +100,10 @@ export default function PublicServiceTemplateStore() {
           />
         </div>
       </div>
-      {initialized? (
+      {!state.loading ? (
         searchState.publicServiceTemplates.length === 0 ? (
-          <div className="w-full h-3/4 flex flex-col justify-center items-center">
-            <img className="w-1/4 mx-auto align-middle" src="../../public/404.png" />
-          </div>
-        ): (
+          <NotFound />
+        ) : (
           <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
             {state.publicServiceTemplates.map((publicServiceTemplate, idx) => (
               <TemplateCard
@@ -112,7 +116,7 @@ export default function PublicServiceTemplateStore() {
             ))}
           </div>
         )
-      ): (
+      ) : (
         <Loading />
       )}
     </div>

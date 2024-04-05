@@ -1,13 +1,13 @@
-import { Button, Divider, Input, Textarea } from "react-daisyui";
 import { Fragment, useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Dialog, Transition } from '@headlessui/react'
-import { DocumentCheckIcon, EyeIcon } from '@heroicons/react/24/outline'
-import { setting } from "../api/setting";
-import { OpenAPPConfig } from "../types/config";
-import logo from "/logo.png";
+import { Button, Divider, Input, Textarea } from "react-daisyui";
+import { Dialog, Transition } from "@headlessui/react";
+import { DocumentCheckIcon, EyeIcon } from "@heroicons/react/24/outline";
+import { setting } from "../api";
+import { OpenAPPConfig } from "../types";
 import { token } from "../storage";
 import { useAuth } from "../component/AuthProvider";
+import logo from "/logo.png";
 
 interface State {
   openappConfig: OpenAPPConfig;
@@ -84,7 +84,12 @@ export default function SettingPage() {
   return (
     <div className="flex flex-col mt-8">
       <Transition.Root show={open} as={Fragment}>
-        <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setOpen}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          initialFocus={cancelButtonRef}
+          onClose={setOpen}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -112,15 +117,22 @@ export default function SettingPage() {
                   <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                        <DocumentCheckIcon className="h-6 w-6 text-blue-600" aria-hidden="true" />
+                        <DocumentCheckIcon
+                          className="h-6 w-6 text-blue-600"
+                          aria-hidden="true"
+                        />
                       </div>
                       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                        <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
+                        <Dialog.Title
+                          as="h3"
+                          className="text-base font-semibold leading-6 text-gray-900"
+                        >
                           Setting Updated
                         </Dialog.Title>
                         <div className="mt-2">
                           <p className="text-sm text-gray-500">
-                            The OpenAPP setting has been successfully updated and will take effect in a few seconds.
+                            The OpenAPP setting has been successfully updated
+                            and will take effect in a few seconds.
                           </p>
                         </div>
                       </div>
@@ -153,7 +165,9 @@ export default function SettingPage() {
           <div className="w-full rounded-md p-2 justify-center items-center">
             <img className="w-24 h-24 object-center mx-auto" src={logo} />
           </div>
-          <em className="text-neutral-500 w-full flex justify-center">An integrated application management platform for NAS/Linux.</em>
+          <em className="text-neutral-500 w-full flex justify-center">
+            An integrated application management platform for NAS/Linux.
+          </em>
         </div>
         <div className="flex flex-col justify-center w-7/12">
           <div className="flex flex-col p-2 space-y-2 mt-10 justify-center">
@@ -175,9 +189,7 @@ export default function SettingPage() {
                   name="password"
                   size="md"
                   className="w-full focus:outline-blue-500"
-                  type={
-                    showPassword ? "text" : "password"
-                  }
+                  type={showPassword ? "text" : "password"}
                   value={state.openappConfig.password}
                   onChange={handleFormChange}
                 />

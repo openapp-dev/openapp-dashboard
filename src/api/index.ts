@@ -5,3 +5,4 @@ export * from "./publicserviceinstance";
 export * from "./setting";
 export * from "./version";
 export * from "./login";
+export * from "./logs";
