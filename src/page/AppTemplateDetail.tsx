@@ -1,16 +1,15 @@
+import { useEffect, useState, Fragment, useRef } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button, Divider, Input } from "react-daisyui";
-import { Link, useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { Dialog, Listbox, Transition } from "@headlessui/react";
 import {
   InboxStackIcon,
   QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect, useState, Fragment, useRef } from "react";
-import { Dialog, Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
-import { AppTemplate, InputField } from "../types";
 import { parseYaml } from "../util";
-import { publicServiceInstance } from "../api/publicserviceinstance";
+import { publicServiceInstance } from "../api";
+import { AppTemplate, InputField } from "../types";
 import Panel from "../component/Panel";
 import {
   Configuration,

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { appTemplate } from "../api";
 import { AppTemplate } from "../types";
+
 import TemplateCard from "../component/TemplateCard";
-import { useNavigate } from "react-router-dom";
-import { MdSearch } from "react-icons/md";
-import { Loading } from "../component/Loading";
+import Loading from "../component/Loading";
+import NotFound from "../component/NotFound";
 
 interface State {
   appTemplates: AppTemplate[];
@@ -28,7 +30,6 @@ export default function AppTemplateStore() {
     appTemplates: state.appTemplates,
     keyword: "",
   });
-  const [initialized, setInitialized] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -38,11 +39,8 @@ export default function AppTemplateStore() {
         setState({ ...state, loading: false, error: message });
         return;
       }
-
-      await new Promise(f => setTimeout(f, 1000));
-      setInitialized(true);
       setState({ appTemplates: data ?? [], loading: false, error: null });
-      setSearchState({...searchState, appTemplates: data ?? []});
+      setSearchState({ ...searchState, appTemplates: data ?? [] });
     }
     fetchData();
   }, []);
@@ -52,7 +50,7 @@ export default function AppTemplateStore() {
       setSearchState({ ...searchState, appTemplates: state.appTemplates });
     } else {
       const filteredAppTemplates = state.appTemplates.filter((appTemplate) => {
-        let name = appTemplate.metadata.name?? "";
+        let name = appTemplate.metadata.name ?? "";
         return name.toLowerCase().startsWith(searchState.keyword.toLowerCase());
       });
       setSearchState({ ...searchState, appTemplates: filteredAppTemplates });
@@ -79,7 +77,7 @@ export default function AppTemplateStore() {
       <div className="w-full mb-16 mt-1">
         <div className="relative sm:mx-auto sm:w-3/5">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <MdSearch className="w-5 h-5 text-gray-400" />
+            <MagnifyingGlassIcon className="w-5 h-5 text-gray-500" />
           </div>
           <input
             className="block w-full p-4 ps-10 text-sm text-black border border-gray-200 rounded-lg bg-white focus:outline-blue-500"
@@ -90,12 +88,10 @@ export default function AppTemplateStore() {
           />
         </div>
       </div>
-      {initialized ? (
+      {!state.loading ? (
         searchState.appTemplates.length === 0 ? (
-          <div className="w-full h-3/4 flex flex-col justify-center items-center">
-            <img className="w-1/4 mx-auto align-middle" src="../../public/404.png" />
-          </div>
-        ): (
+          <NotFound />
+        ) : (
           <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
             {state.appTemplates.map((appTemplate, idx) => (
               <TemplateCard
@@ -108,7 +104,7 @@ export default function AppTemplateStore() {
             ))}
           </div>
         )
-      ): (
+      ) : (
         <Loading />
       )}
     </div>

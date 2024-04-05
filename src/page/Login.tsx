@@ -1,11 +1,10 @@
-import { Avatar, Button, Input, Link } from "react-daisyui";
-import { useAuth } from "../component/AuthProvider";
-import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Avatar, Button, Input, Link } from "react-daisyui";
 import { token } from "../storage";
 import { login } from "../api";
+import { useAuth } from "../component/AuthProvider";
 import logo from "/logo.png";
-
 
 interface State {
   username: string;
@@ -56,11 +55,13 @@ export default function Login() {
           <Avatar src={logo} size="sm" shape="square" />
         </div>
         <div className="flex flex-col space-y-2 ">
-          { showLoginError? (
+          {showLoginError ? (
             <div className="w-full flex items-center justify-center">
-              <span className="w-full text-red-600 bg-gray-100 pt-2 pb-2 rounded-md mb-3 text-center">Incorrect user name or password</span>
+              <span className="w-full text-red-600 bg-gray-100 pt-2 pb-2 rounded-md mb-3 text-center">
+                Incorrect user name or password
+              </span>
             </div>
-          ) : (null)}
+          ) : null}
           <Input
             type="text"
             placeholder="username"

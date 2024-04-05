@@ -10,7 +10,7 @@ function renderInputField(input: ConfigurationField) {
   switch (type) {
     case "string":
       return <Configuration.Text {...input} key={fieldKey} />;
-    case "number":
+    case "integer":
       return <Configuration.Number {...input} key={fieldKey} />;
     case "boolean":
       return <Configuration.Boolean {...input} key={fieldKey} />;
@@ -35,12 +35,12 @@ interface ConfigurationSubmitProps {
 interface ConfigurationField {
   fieldKey: string;
   name: string;
-  type: "string" | "number" | "boolean" | "array" | "object";
+  type: "string" | "integer" | "boolean" | "array" | "object";
   required: boolean;
   description: string;
   default?: string | number | boolean;
   items?: {
-    type: "string" | "number" | "boolean" | "array" | "object";
+    type: "string" | "integer" | "boolean" | "array" | "object";
     properties?: Record<string, ConfigurationField>;
   };
   properties?: Record<string, ConfigurationField>;
