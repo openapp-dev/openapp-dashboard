@@ -12,7 +12,7 @@ import { Fragment, useRef, useEffect, useState } from 'react'
 
 import Panel from "../component/Panel";
 import { publicServiceInstance, publicServiceTemplate } from "../api";
-import { renderMardownDetails } from "../util/helper";
+import TemplateMarkdown from "../component/TemplateMarkdown";
 import { Loading } from "../component/Loading";
 
 interface State {
@@ -60,7 +60,9 @@ export default function PublicServiceInstanceEdit() {
         loading: false,
         error: null,
       });
-      setDetails(await renderMardownDetails(template.data?.spec.url ?? ""));
+      setDetails(TemplateMarkdown({
+        url: template.data?.spec.url ?? "",
+      }));
     }
     fetchData();
   }, []);
