@@ -134,7 +134,7 @@ Configuration.Text = ({
       <label className="sm:min-w-64">{name}</label>
       <Input
         key={fieldKey}
-        className="w-full sm:w-96"
+        className="w-full sm:w-96 focus:outline-blue-500"
         type="text"
         name={fieldKey}
         required={required}
@@ -169,7 +169,7 @@ Configuration.Number = ({
       <label className="sm:min-w-64">{name}</label>
       <Input
         key={fieldKey}
-        className="w-full sm:w-96"
+        className="w-full sm:w-96 focus:outline-blue-500"
         type="number"
         name={fieldKey}
         required={required}
