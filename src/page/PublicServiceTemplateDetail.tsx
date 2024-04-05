@@ -1,14 +1,17 @@
 import { Button, Divider, Input } from "react-daisyui";
 import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { PublicServiceTemplate, Inputs } from "../types";
-import { renderFormField, renderMardownDetails } from "../util/helper";
+import { PublicServiceTemplate, InputField } from "../types";
 import { parseYaml } from "../util";
 import Panel from "../component/Panel";
-import { InboxStackIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
-import { Fragment, useEffect, useRef, useState } from "react";
-import { Loading } from "../component/Loading";
+import {
+  InboxStackIcon,
+  QuestionMarkCircleIcon,
+} from "@heroicons/react/24/outline";
+import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import TemplateMarkdown from "../component/TemplateMarkdown";
+import { Configuration } from "../component/Configuration";
 
 export default function PublicServiceTemplateDetail() {
   const location = useLocation();
@@ -16,24 +19,20 @@ export default function PublicServiceTemplateDetail() {
   if (!template) {
     return <div>Template not found</div>;
   }
-  const inputs = parseYaml<Inputs>(template.spec.inputs);
-
-  let emptyDetails = (<Loading />);
-  const [publicServiceDetails, setPublicServiceDetails] = useState<JSX.Element>(emptyDetails);
-  useEffect(() => {
-    const fetchAppDetails = async () => {
-      setPublicServiceDetails(await renderMardownDetails(template.spec.url));
-    };
-    fetchAppDetails();
-  }, []);
-
+  const inputs = parseYaml<Record<string, InputField>>(template.spec.inputs);
   const navigate = useNavigate();
   const [publicServiceCreate, setPublicServiceCreate] = useState(false);
   const cancelButtonRef = useRef(null);
+
   return (
     <div className="flex flex-col mt-8">
       <Transition.Root show={publicServiceCreate} as={Fragment}>
-        <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setPublicServiceCreate}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          initialFocus={cancelButtonRef}
+          onClose={setPublicServiceCreate}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -61,10 +60,16 @@ export default function PublicServiceTemplateDetail() {
                   <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                        <QuestionMarkCircleIcon className="h-6 w-6 text-blue-600" aria-hidden="true" />
+                        <QuestionMarkCircleIcon
+                          className="h-6 w-6 text-blue-600"
+                          aria-hidden="true"
+                        />
                       </div>
                       <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                        <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
+                        <Dialog.Title
+                          as="h3"
+                          className="text-base font-semibold leading-6 text-gray-900"
+                        >
                           Create Public Service
                         </Dialog.Title>
                         <div className="mt-2">
@@ -80,10 +85,9 @@ export default function PublicServiceTemplateDetail() {
                       type="button"
                       className="ml-3 bg-red-500 hover:bg-red-600 mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm ring-none sm:mt-0 sm:w-auto"
                       onClick={() => {
-                          setPublicServiceCreate(false);
-                          navigate("/instance/publicservice");
-                        }
-                      }
+                        setPublicServiceCreate(false);
+                        navigate("/instance/publicservice");
+                      }}
                       ref={cancelButtonRef}
                     >
                       Yes
@@ -116,7 +120,7 @@ export default function PublicServiceTemplateDetail() {
           <div className="flex-none w-24 h-24 rounded-md p-2 border border-gray-300 flex items-center justify-center">
             {template.spec.icon === "" ? (
               // Set size
-              <span className="text-lg font-bold text-6xl">
+              <span className="font-bold text-6xl">
                 {template.spec.title[0].toUpperCase()}
               </span>
             ) : (
@@ -132,9 +136,11 @@ export default function PublicServiceTemplateDetail() {
             <div className="text-sm">{template.spec.description}</div>
           </div>
           <div className="flex-none">
-            <Button className="px-4 py-2 bg-sky-600 hover:bg-sky-700 rounded-md" onClick={() => setPublicServiceCreate(true)}>
-              <InboxStackIcon className="h-6 w-6 text-white">
-              </InboxStackIcon>
+            <Button
+              className="px-4 py-2 bg-sky-600 hover:bg-sky-700 rounded-md"
+              onClick={() => setPublicServiceCreate(true)}
+            >
+              <InboxStackIcon className="h-6 w-6 text-white"></InboxStackIcon>
             </Button>
           </div>
         </div>
@@ -142,23 +148,21 @@ export default function PublicServiceTemplateDetail() {
           <div className="flex flex-col p-2 space-y-2">
             {/* Following are the build-in necessary params */}
             <div className="flex items-center flex-col sm:flex-row sm:space-x-4 space-y-2">
-                <label className="sm:min-w-64">Instance Name</label>
-                <Input
-                  name="instanceName"
-                  type="text"
-                  className="sm:w-96 w-full focus:outline-blue-500"
-                  placeholder="APP instance name"
-                />
+              <label className="sm:min-w-64">Instance Name</label>
+              <Input
+                name="instanceName"
+                type="text"
+                className="sm:w-96 w-full focus:outline-blue-500"
+                placeholder="APP instance name"
+              />
             </div>
 
-            {/* Following are the params rendering based
-            on template spec */}
-            {Object.entries(inputs).map(renderFormField)}
+            <Configuration inputs={inputs} />
           </div>
         </Panel>
         <Panel title="Public Service details">
           <div className="pl-3 pr-3 pt-3">
-            {publicServiceDetails}
+            <TemplateMarkdown url={template.spec.url} />
           </div>
         </Panel>
       </div>

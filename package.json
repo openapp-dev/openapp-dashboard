@@ -16,6 +16,7 @@
     "js-yaml": "^4.1.0",
     "kubernetes-models": "^4.3.1",
     "kubernetes-types": "^1.26.0",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-daisyui": "^5.0.0",
     "react-dom": "^18.2.0",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.12",
     "@types/js-yaml": "^4.0.9",
+    "@types/lodash": "^4.17.0",
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
     "@typescript-eslint/eslint-plugin": "^7.0.2",

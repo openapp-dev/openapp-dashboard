@@ -1,7 +1,7 @@
 import jsYaml from "js-yaml";
 
 function parseYaml<T>(yaml: string): T {
-  return jsYaml.dump(yaml) as T;
+  return jsYaml.load(yaml) as T;
 }
 
 export { parseYaml };
