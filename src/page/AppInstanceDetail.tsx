@@ -183,7 +183,7 @@ export default function AppInstanceDetail() {
   const cancelButtonRef = useRef(null);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col mt-8">
       <Transition.Root show={deleteResultOpen} as={Fragment}>
         <Dialog
           as="div"
@@ -457,7 +457,7 @@ export default function AppInstanceDetail() {
                 <RocketLaunchIcon className="w-5 mt-1 text-sky-600"></RocketLaunchIcon>
               </label>
               <label className="sm:min-w-60">Ready</label>
-              <span>{state.appInstance?.status.appReady ? "Yes" : "No"}</span>
+              <span>{state.appInstance?.status?.appReady ? "Yes" : "No"}</span>
             </div>
             <div className="flex items-center flex-col sm:flex-row sm:space-x-1 space-y-2">
               <label className="sm:min-w-8">
@@ -467,14 +467,14 @@ export default function AppInstanceDetail() {
               <Link
                 className="text-blue-500 hover:text-blue-800"
                 to={
-                  state.appInstance?.status.localServiceURL
+                  state.appInstance?.status?.localServiceURL
                     ? state.appInstance?.status.localServiceURL
                     : ""
                 }
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {state.appInstance?.status.localServiceURL}
+                {state.appInstance?.status?.localServiceURL}
               </Link>
             </div>
             <div className="flex items-center flex-col sm:flex-row sm:space-x-1 space-y-2">
@@ -485,14 +485,14 @@ export default function AppInstanceDetail() {
               <Link
                 className="text-blue-500 hover:text-blue-800"
                 to={
-                  state.appInstance?.status.externalServiceURL
+                  state.appInstance?.status?.externalServiceURL
                     ? state.appInstance?.status.externalServiceURL
                     : ""
                 }
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {state.appInstance?.status.externalServiceURL}
+                {state.appInstance?.status?.externalServiceURL}
               </Link>
             </div>
           </div>

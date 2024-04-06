@@ -185,7 +185,7 @@ export default function PublicServiceInstanceDetail() {
   const cancelButtonRef = useRef(null);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col mt-8">
       <Transition.Root show={deleteResultOpen} as={Fragment}>
         <Dialog
           as="div"

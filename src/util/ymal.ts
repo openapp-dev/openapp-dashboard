@@ -4,4 +4,8 @@ function parseYaml<T>(yaml: string): T {
   return jsYaml.load(yaml) as T;
 }
 
-export { parseYaml };
+function encodeYaml(data: Record<string, any>): string {
+  return jsYaml.dump(data)
+}
+
+export { parseYaml, encodeYaml };

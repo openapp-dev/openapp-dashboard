@@ -1,6 +1,6 @@
-import { useEffect, useState, Fragment, useRef } from "react";
+import React, { useEffect, useState, Fragment, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Button, Divider, Input } from "react-daisyui";
+import { Divider, Input } from "react-daisyui";
 import { Dialog, Listbox, Transition } from "@headlessui/react";
 import {
   InboxStackIcon,
@@ -8,8 +8,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { parseYaml } from "../util";
-import { publicServiceInstance } from "../api";
-import { AppTemplate, InputField } from "../types";
+import { appInstance, publicServiceInstance } from "../api";
+import { AppTemplate, InputField, createAppInstanceType } from "../types";
 import Panel from "../component/Panel";
 import {
   Configuration,
@@ -25,8 +25,15 @@ export default function AppTemplateDetail() {
   }
   const inputs = parseYaml<Record<string, InputField>>(template.spec.inputs);
 
+  const [config, setConfig] = useState<Record<string, any> | null>(null);
+
+  function handleAppCreate() {
+    let appInstanceNew = createAppInstanceType(instanceName, template.metadata.name ?? "", selected.name,  config);
+    appInstance.createOrUpdateAppInstance(appInstanceNew)
+  }
+
   function handleInstall(data: Record<string, any>) {
-    console.log(data);
+    setConfig(data);
     setAppCreate(true);
   }
 
@@ -57,6 +64,11 @@ export default function AppTemplateDetail() {
   const [appCreate, setAppCreate] = useState(false);
   const cancelButtonRef = useRef(null);
   const [selected, setSelected] = useState(publicService[0]);
+
+  const [instanceName, setInstanceName] = useState<string>(template.metadata.name ?? "");
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setInstanceName(e.target.value);
+  }
 
   return (
     <ConfigurationProvider>
@@ -121,6 +133,7 @@ export default function AppTemplateDetail() {
                         className="ml-3 bg-red-500 hover:bg-red-600 mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm ring-none sm:mt-0 sm:w-auto"
                         onClick={() => {
                           setAppCreate(false);
+                          handleAppCreate();
                           navigate("/instance/app");
                         }}
                         ref={cancelButtonRef}
@@ -172,12 +185,11 @@ export default function AppTemplateDetail() {
               <div className="text-sm">{template.spec.description}</div>
             </div>
             <div className="flex-none">
-              <Button
-                className="px-4 py-2 bg-sky-600 hover:bg-sky-700 rounded-md"
-                onClick={handleInstall}
-              >
-                <InboxStackIcon className="h-6 w-6 text-white"></InboxStackIcon>
-              </Button>
+              <Configuration.Submit
+                children={
+                  <InboxStackIcon className="h-6 w-6 text-white"></InboxStackIcon>
+                }
+                onClick={handleInstall}/>
             </div>
           </div>
           <Panel title="Configuration">
@@ -190,6 +202,8 @@ export default function AppTemplateDetail() {
                   type="text"
                   className="sm:w-96 w-full focus:outline-blue-500"
                   placeholder="APP instance name"
+                  value={instanceName}
+                  onChange={handleChange}
                 />
               </div>
 
