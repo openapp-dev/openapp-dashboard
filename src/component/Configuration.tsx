@@ -273,8 +273,7 @@ Configuration.Submit = ({ children, onClick }) => {
   const { getValues } = useContext(ConfigurationContext);
   return (
     <Button
-      className="w-full"
-      color="primary"
+      className="px-4 py-2 bg-sky-600 hover:bg-sky-700 rounded-md"
       onClick={() => {
         const data = getValues();
         onClick(data);
@@ -285,4 +284,4 @@ Configuration.Submit = ({ children, onClick }) => {
   );
 };
 
-export { Configuration, ConfigurationProvider };
+export { Configuration, ConfigurationProvider, ConfigurationContext };

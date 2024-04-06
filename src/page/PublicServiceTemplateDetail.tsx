@@ -26,6 +26,11 @@ export default function PublicServiceTemplateDetail() {
   const [publicServiceCreate, setPublicServiceCreate] = useState(false);
   const cancelButtonRef = useRef(null);
 
+  const [instanceName, setInstanceName] = useState<string>(template.metadata.name ?? "");
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setInstanceName(e.target.value);
+  }
+
   return (
     <ConfigurationProvider>
       <div className="flex flex-col mt-8">
@@ -159,6 +164,8 @@ export default function PublicServiceTemplateDetail() {
                   type="text"
                   className="sm:w-96 w-full focus:outline-blue-500"
                   placeholder="APP instance name"
+                  value={instanceName}
+                  onChange={handleChange}
                 />
               </div>
 
