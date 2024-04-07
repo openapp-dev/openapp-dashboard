@@ -3,8 +3,10 @@ import { MdSearch } from "react-icons/md";
 import { publicServiceInstance, publicServiceTemplate } from "../api";
 import { PublicServiceTemplate, PublicServiceInstance } from "../types";
 
-import { PublicServiceInstanceCard } from "../component/InstanceCard";
+import InstanceCard from "../component/InstanceCard";
 import Loading from "../component/Loading";
+import NotFound from "../component/NotFound";
+import { useNavigate } from "react-router-dom";
 
 interface State {
   publicServiceInstances: PublicServiceInstance[];
@@ -25,12 +27,12 @@ export default function PublicServiceInstancePage() {
     loading: true,
     error: null,
   });
-  const [initialized, setInitialized] = useState<boolean>(false);
 
   const [searchState, setSearchState] = useState<SearchState>({
     instances: state.publicServiceInstances,
     keyword: "",
   });
+
   useEffect(() => {
     async function fetchData() {
       const { success, message, data } =
@@ -56,8 +58,6 @@ export default function PublicServiceInstancePage() {
           templateMap[templateName] = template;
         }
       });
-      await new Promise((f) => setTimeout(f, 1000));
-      setInitialized(true);
       setState({
         publicServiceInstances: data ?? [],
         publicServiceTemplates: templateMap,
@@ -96,6 +96,8 @@ export default function PublicServiceInstancePage() {
     setSearchState({ ...searchState, keyword: event.target.value });
   }
 
+  const navigate = useNavigate();
+
   return (
     <div className="w-full h-full mt-4">
       <div className="w-full mb-16 mt-1">
@@ -112,21 +114,20 @@ export default function PublicServiceInstancePage() {
           />
         </div>
       </div>
-      {initialized ? (
+      {!state.loading ? (
         searchState.instances.length === 0 ? (
-          <div className="w-full h-3/4 flex flex-col justify-center items-center">
-            <img
-              className="w-1/4 mx-auto align-middle"
-              src="../../public/404.png"
-            />
-          </div>
+          <NotFound />
         ) : (
           <div className="grid xl:grid-cols-8 md:grid-cols-4 grid-cols-2 gap-4">
             {searchState.instances.map((instance, idx) => (
-              <PublicServiceInstanceCard
+              <InstanceCard
                 key={idx}
                 title={instance.metadata.name ?? ""}
-                icon={""}
+                handleClick={(instanceName) => {
+                  navigate("/instance/publicservice/detail", {
+                    state: { name: instanceName },
+                  });
+                }}
               />
             ))}
           </div>
