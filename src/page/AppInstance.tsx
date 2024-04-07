@@ -3,9 +3,10 @@ import { MdSearch } from "react-icons/md";
 import { appInstance, appTemplate } from "../api";
 import { AppInstance, AppTemplate } from "../types";
 
-import AppInstanceCard from "../component/InstanceCard";
+import InstanceCard from "../component/InstanceCard";
 import Loading from "../component/Loading";
 import NotFound from "../component/NotFound";
+import { useNavigate } from "react-router-dom";
 
 interface State {
   appInstances: AppInstance[];
@@ -85,6 +86,8 @@ export default function AppInstancePage() {
     setSearchState({ ...searchState, keyword: event.target.value });
   }
 
+  const navigate = useNavigate();
+
   return (
     <div className="w-full h-full mt-4">
       <div className="w-full mb-16 mt-1">
@@ -107,12 +110,17 @@ export default function AppInstancePage() {
         ) : (
           <div className="grid xl:grid-cols-8 md:grid-cols-4 grid-cols-2 gap-4">
             {searchState.appInstances.map((appInstance, idx) => (
-              <AppInstanceCard
+              <InstanceCard
                 key={idx}
                 title={appInstance.metadata.name ?? ""}
                 icon={
                   state.appTemplates[appInstance.spec.appTemplate].spec.icon
                 }
+                handleClick={(instanceName) => {
+                  navigate("/instance/app/detail", {
+                    state: { name: instanceName },
+                  });
+                }}
               />
             ))}
           </div>

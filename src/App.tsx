@@ -11,7 +11,6 @@ import AppInstanceDetail from "./page/AppInstanceDetail";
 import Login from "./page/Login";
 import { AuthProvider } from "./component/AuthProvider";
 import PublicServiceInstanceDetail from "./page/PublicServiceInstanceDetail";
-import AppInstanceEdit from "./page/AppInstanceEdit";
 import PublicServiceInstanceEdit from "./page/PublicServiceInstanceEdit";
 
 export default function App() {
@@ -22,7 +21,7 @@ export default function App() {
             <Route index element={<AppInstancePage />} />
             <Route path="/instance/app" element={<AppInstancePage />} />
             <Route path="/instance/app/detail" element={<AppInstanceDetail />} />
-            <Route path="/instance/app/edit" element={<AppInstanceEdit />} />
+            <Route path="/instance/app/edit" element={<AppTemplateDetail />} />
             <Route path="/instance/publicservice" element={<PublicServiceInstancePage />} />
             <Route path="/instance/publicservice/detail" element={<PublicServiceInstanceDetail />} />
             <Route path="/instance/publicservice/edit" element={<PublicServiceInstanceEdit />} />
