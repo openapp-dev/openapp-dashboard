@@ -12,7 +12,9 @@ async function request<T, R>(request: Request<T>): Promise<Response<R>> {
     body: JSON.stringify(request.data),
   });
   if (!response.ok) {
-    if (response.status === 401) {
+    // Do not reload login page, it's not necessary
+    let path = window.location.pathname.replace(/^\//, "").replace(/\/$/, "");
+    if (response.status === 401 && path != "login") {
       token.clear();
       window.location.reload();
       return {
