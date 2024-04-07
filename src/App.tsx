@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router";
+import { AuthProvider } from "./component/AuthProvider";
 import Layout from "./page/Layout";
 import AppTemplateStore from "./page/AppTemplate";
 import AppTemplateDetail from "./page/AppTemplateDetail";
@@ -9,7 +10,6 @@ import SettingPage from "./page/Setting";
 import PublicServiceInstancePage from "./page/PublicServiceInstance";
 import AppInstanceDetail from "./page/AppInstanceDetail";
 import Login from "./page/Login";
-import { AuthProvider } from "./component/AuthProvider";
 import PublicServiceInstanceDetail from "./page/PublicServiceInstanceDetail";
 import PublicServiceInstanceEdit from "./page/PublicServiceInstanceEdit";
 

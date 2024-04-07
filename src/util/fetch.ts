@@ -12,6 +12,14 @@ async function request<T, R>(request: Request<T>): Promise<Response<R>> {
     body: JSON.stringify(request.data),
   });
   if (!response.ok) {
+    if (response.status === 401) {
+      token.clear();
+      window.location.reload();
+      return {
+        success: false,
+        message: "Unauthorized",
+      };
+    }
     return {
       success: false,
       message: response.statusText,

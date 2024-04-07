@@ -26,8 +26,9 @@ export default function Login() {
     password: "",
   });
 
-  function handleInputChange(key: string, value: string) {
-    setState({ ...state, [key]: value });
+  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = event.target;
+    setState((prev) => ({ ...prev, [name]: value }));
   }
 
   async function handleLogin() {
@@ -37,16 +38,18 @@ export default function Login() {
       setShowLoginError(true);
       return;
     }
-    if (!resp.data?.token) {
+    const respToken = resp.data?.token;
+    if (!respToken) {
       return;
     }
-    auth.signin(state.username, () => {
-      token.set(resp.data?.token as string);
+    auth.signin(() => {
+      token.set(respToken);
       navigate("/");
     });
   }
 
   const [showLoginError, setShowLoginError] = useState<boolean>(false);
+
   return (
     <div className="h-screen flex items-center lg:justify-end justify-center bg-cover bg-login">
       <div className="flex flex-col w-96 rounded-lg space-y-8 px-4 py-4 lg:mr-48 bg-white">
@@ -63,13 +66,12 @@ export default function Login() {
             </div>
           ) : null}
           <Input
+            name="username"
             type="text"
             placeholder="username"
             className="appearance-none bg-transparent rounded-none border-x-0 border-t-0 border-b-2 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
             value={state.username}
-            onChange={(e) => {
-              handleInputChange("username", e.target.value);
-            }}
+            onChange={handleInputChange}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 handleLogin();
@@ -78,13 +80,12 @@ export default function Login() {
           />
           <span />
           <Input
+            name="password"
             type="password"
             placeholder="password"
             className="appearance-none bg-transparent rounded-none border-x-0 border-t-0 border-b-2 w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
             value={state.password}
-            onChange={(e) => {
-              handleInputChange("password", e.target.value);
-            }}
+            onChange={handleInputChange}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 handleLogin();
