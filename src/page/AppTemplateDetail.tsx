@@ -213,10 +213,11 @@ export default function AppTemplateDetail() {
                 <label className="sm:min-w-64">Public Service</label>
                 <Select
                   name="publicService"
+                  className="sm:w-96 w-full focus:outline-blue-500"
                   value={form.publicService}
                   onChange={handleChange}
                 >
-                  <Select.Option value="No Exposure" disabled>
+                  <Select.Option value="No Exposure">
                     No Exposure
                   </Select.Option>
                   {state.publicService.map((item, idx) => (
