@@ -2,7 +2,9 @@ import { useRef, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button, Divider, Input } from "react-daisyui";
 import {
+  ExclamationCircleIcon,
   InboxStackIcon,
+  QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
 import { PublicServiceTemplate, InputField, createPublicServiceInstanceType } from "../types";
 import { parseYaml } from "../util";
@@ -15,10 +17,13 @@ import {
 import NotFound from "../component/NotFound";
 import { publicServiceInstance } from "../api";
 import { OpenAppDialog } from "../component/OpenAppDialog";
+import Loading from "../component/Loading";
 
 interface State {
   publicService: string[];
   dialogOpen: boolean;
+  errDialogOpen: boolean;
+  errorMsg: string;
   edit: boolean;
   loading: boolean;
   error?: string;
@@ -42,6 +47,8 @@ export default function PublicServiceTemplateDetail() {
     loading: true,
     edit: instanceName ? true : false,
     dialogOpen: false,
+    errDialogOpen: false,
+    errorMsg: "",
   });
 
   const [form, setForm] = useState<ConfigurationForm>({
@@ -61,7 +68,8 @@ export default function PublicServiceTemplateDetail() {
       instanceNew
     );
     if (!success) {
-      console.error(message);
+      setState((prev) => ({ ...prev, dialogOpen: false, errDialogOpen: true, errorMsg: message }));
+      return
     }
     setState((prev) => ({ ...prev, dialogOpen: false }));
     if (state.edit) {
@@ -104,6 +112,34 @@ export default function PublicServiceTemplateDetail() {
       <div className="flex flex-col mt-8">
         <OpenAppDialog
           initialFocus={cancelButtonRef}
+          show={state.errDialogOpen}
+          onClose={(value) =>
+            setState((prev) => ({ ...prev, errDialogOpen: value }))
+          }
+          title={"Error"}
+          content={"Error message:" + state.errorMsg + ", please check your input parameters."}
+          confirm={<></>}
+          cancel={
+            <Button
+              ref={cancelButtonRef}
+              color="primary"
+              size="sm"
+              onClick={() =>
+                setState((prev) => ({ ...prev, errDialogOpen: false }))
+              }
+            >
+              Cancel
+            </Button>
+          }
+          icon={
+            <ExclamationCircleIcon
+              className="h-6 w-6 text-blue-600"
+              aria-hidden="true"
+            />
+          }
+        />
+        <OpenAppDialog
+          initialFocus={cancelButtonRef}
           show={state.dialogOpen}
           onClose={(value) =>
             setState((prev) => ({ ...prev, dialogOpen: value }))
@@ -135,6 +171,12 @@ export default function PublicServiceTemplateDetail() {
             >
               Cancel
             </Button>
+          }
+          icon={
+            <QuestionMarkCircleIcon
+              className="h-6 w-6 text-blue-600"
+              aria-hidden="true"
+            />
           }
         />
         <div className="flex space-x-1">

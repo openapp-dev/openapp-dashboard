@@ -3,6 +3,7 @@ import { DocumentIcon } from "@heroicons/react/24/outline";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
+import Loading from "./Loading";
 
 interface TemplateMarkdownProps {
   url: string;
@@ -11,12 +12,14 @@ interface TemplateMarkdownProps {
 interface State {
   data: string;
   error: boolean;
+  loaded: boolean;
 }
 
 export default function TemplateMarkdown({ url }: TemplateMarkdownProps) {
   const [state, setState] = useState<State>({
     data: "",
     error: false,
+    loaded: false,
   });
 
   useEffect(() => {
@@ -24,13 +27,17 @@ export default function TemplateMarkdown({ url }: TemplateMarkdownProps) {
       try {
         const response = await fetch(url);
         const data = await response.text();
-        setState({ data, error: false });
+        setState({ data, error: false, loaded: true });
       } catch (error) {
-        setState({ data: "", error: true });
+        setState({ data: "", error: true, loaded: false });
       }
     }
     fetchData();
   }, []);
+
+  if (!state.loaded) {
+    return <Loading />
+  }
 
   return (
     <>

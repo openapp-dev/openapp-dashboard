@@ -6,6 +6,9 @@ import {
   RocketLaunchIcon,
   BuildingStorefrontIcon,
   GlobeAltIcon,
+  ExclamationCircleIcon,
+  CheckBadgeIcon,
+  CheckIcon,
 } from "@heroicons/react/24/outline";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { Menu, Transition } from "@headlessui/react";
@@ -118,6 +121,12 @@ export default function AppInstanceDetail() {
             OK
           </Button>
         }
+        icon={
+          <CheckIcon
+            className="h-6 w-6 text-blue-600"
+            aria-hidden="true"
+          />
+        }
       />
       <OpenAppDialog
         show={deleteWaringOpen}
@@ -148,6 +157,12 @@ export default function AppInstanceDetail() {
           >
             No
           </Button>
+        }
+        icon={
+          <ExclamationCircleIcon
+            className="h-6 w-6 text-blue-600"
+            aria-hidden="true"
+          />
         }
       />
       <div className="flex space-x-1">
