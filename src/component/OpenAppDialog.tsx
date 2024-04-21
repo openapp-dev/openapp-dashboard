@@ -1,5 +1,4 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { Fragment, MutableRefObject } from "react";
 
 interface OpenAppDialogProps {
@@ -10,6 +9,7 @@ interface OpenAppDialogProps {
   content: string;
   confirm?: React.ReactNode;
   cancel?: React.ReactNode;
+  icon: React.ReactNode;
 }
 
 function OpenAppDialog({
@@ -19,6 +19,7 @@ function OpenAppDialog({
   content,
   confirm,
   cancel,
+  icon,
 }: OpenAppDialogProps) {
   return (
     <Transition.Root show={show} as={Fragment}>
@@ -55,10 +56,7 @@ function OpenAppDialog({
                 <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                   <div className="sm:flex sm:items-start">
                     <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                      <QuestionMarkCircleIcon
-                        className="h-6 w-6 text-blue-600"
-                        aria-hidden="true"
-                      />
+                      {icon}
                     </div>
                     <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                       <Dialog.Title
