@@ -73,7 +73,7 @@ export default function AppTemplateDetail() {
     let appInstanceNew = createAppInstanceType(
       form.instanceName,
       template.metadata.name ?? "",
-      form.publicService,
+      form.publicService == "No Exposure" ? "" : form.publicService,
       form.inputs
     );
     const { success, message } = await appInstance.createOrUpdateAppInstance(
