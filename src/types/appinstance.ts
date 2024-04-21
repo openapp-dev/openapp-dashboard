@@ -61,4 +61,4 @@ export type {
   AppInstanceStatus,
 };
 
-export { createAppInstanceType }
+export { createAppInstanceType };

@@ -4,10 +4,11 @@ import {
   ListMeta,
 } from "@kubernetes-models/apimachinery/apis/meta/v1";
 import { TypeMeta } from "@kubernetes-models/base";
+import { encodeYaml } from "../util/ymal";
 interface PublicServiceInstance extends TypeMeta {
   metadata: ObjectMeta;
   spec: PublicServiceInstanceSpec;
-  status: PublicServiceInstanceStatus;
+  status?: PublicServiceInstanceStatus;
 }
 
 interface PublicServiceInstanceSpec {
@@ -27,9 +28,34 @@ interface PublicServiceInstanceList extends TypeMeta {
   items: PublicServiceInstance[];
 }
 
+function createPublicServiceInstanceType(name: string, template: string, inputs: Record<string, any> | null): PublicServiceInstance {
+  let inputYaml = ""
+  if (inputs != null) {
+    inputYaml = encodeYaml(inputs)
+  }
+  return {
+    apiVersion: "service.openapp.dev/v1alpha1",
+    kind: "PublicServiceInstance",
+    metadata: {
+      name: name,
+      namespace: "openapp",
+      toJSON: function () {
+      },
+      validate: function (): void {
+      }
+    },
+    spec: {
+      publicServiceTemplate: template,
+      inputs: inputYaml,
+    },
+  };
+}
+
 export type {
   PublicServiceInstance,
   PublicServiceInstanceList,
   PublicServiceInstanceSpec,
   PublicServiceInstanceStatus,
 };
+
+export { createPublicServiceInstanceType };

@@ -126,7 +126,7 @@ export default function AppTemplateDetail() {
           title={state.edit ? "Update APP" : "Create APP"}
           content={
             state.edit
-              ? `Are you sure to update APP ${instanceName}?`
+              ? `Are you sure to update APP ${form.instanceName}?`
               : "Are you sure to create APP?"
           }
           confirm={
