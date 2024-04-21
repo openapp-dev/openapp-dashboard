@@ -56,8 +56,9 @@ export default function AppInstanceDetail() {
         setState({ ...state, loading: false, error: template.message });
         return;
       }
-      const logGet = await logs.getAPPInstanceLogs(instanceName);
+
       let logDetail: ReactElement<any, string | JSXElementConstructor<any>>[] = [];
+      const logGet = await logs.getAPPInstanceLogs(instanceName);
       if (logGet.success) {
         logDetail = (logGet.data ?? "").split("\n").map((line) => (
           <>

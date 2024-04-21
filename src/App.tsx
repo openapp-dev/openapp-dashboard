@@ -11,7 +11,6 @@ import PublicServiceInstancePage from "./page/PublicServiceInstance";
 import AppInstanceDetail from "./page/AppInstanceDetail";
 import Login from "./page/Login";
 import PublicServiceInstanceDetail from "./page/PublicServiceInstanceDetail";
-import PublicServiceInstanceEdit from "./page/PublicServiceInstanceEdit";
 
 export default function App() {
   return (
@@ -24,7 +23,7 @@ export default function App() {
             <Route path="/instance/app/edit" element={<AppTemplateDetail />} />
             <Route path="/instance/publicservice" element={<PublicServiceInstancePage />} />
             <Route path="/instance/publicservice/detail" element={<PublicServiceInstanceDetail />} />
-            <Route path="/instance/publicservice/edit" element={<PublicServiceInstanceEdit />} />
+            <Route path="/instance/publicservice/edit" element={<PublicServiceTemplateDetail />} />
             <Route path="/store/app" element={<AppTemplateStore />} />
             <Route path="/store/app/detail" element={<AppTemplateDetail />} />
             <Route path="/store/publicservice" element={<PublicServiceTmeplate />} />
