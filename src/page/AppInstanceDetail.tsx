@@ -1,4 +1,4 @@
-import { Fragment, useRef, ReactElement, useEffect, useState } from "react";
+import { Fragment, useRef, ReactElement, useEffect, useState, JSXElementConstructor } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Divider } from "react-daisyui";
 import {
@@ -57,16 +57,15 @@ export default function AppInstanceDetail() {
         return;
       }
       const logGet = await logs.getAPPInstanceLogs(instanceName);
-      if (!logGet.success) {
-        setState({ ...state, loading: false, error: logGet.message });
-        return;
+      let logDetail: ReactElement<any, string | JSXElementConstructor<any>>[] = [];
+      if (logGet.success) {
+        logDetail = (logGet.data ?? "").split("\n").map((line) => (
+          <>
+            {line}
+            <br />
+          </>
+        ));
       }
-      let logDetail = (logGet.data ?? "").split("\n").map((line) => (
-        <>
-          {line}
-          <br />
-        </>
-      ));
       setState({
         ...state,
         appInstance: instance.data,
