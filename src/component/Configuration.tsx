@@ -25,6 +25,7 @@ function renderInputField(input: ConfigurationField) {
 
 interface ConfigurationProps {
   inputs: Record<string, InputField>;
+  existsData?: Record<string, any>;
 }
 
 interface ConfigurationSubmitProps {
@@ -38,7 +39,7 @@ interface ConfigurationField {
   type: "string" | "integer" | "boolean" | "array" | "object";
   required: boolean;
   description: string;
-  default?: string | number | boolean;
+  default?: string | number | boolean | any[] | Record<string, any>;
   items?: {
     type: "string" | "integer" | "boolean" | "array" | "object";
     properties?: Record<string, ConfigurationField>;
@@ -96,7 +97,7 @@ const Configuration: React.FC<ConfigurationProps> & {
   Array: React.FC<ConfigurationField>;
   Object: React.FC<ConfigurationField>;
   Submit: React.FC<ConfigurationSubmitProps>;
-} = ({ inputs }) => {
+} = ({ inputs, existsData }) => {
   return (
     <>
       {Object.entries(inputs).map(([key, field]) => {
@@ -105,6 +106,7 @@ const Configuration: React.FC<ConfigurationProps> & {
           ...field,
           fieldKey: key,
           name: key,
+          default: existsData ? existsData[key] : field.default,
         } as ConfigurationField);
       })}
     </>
@@ -193,7 +195,13 @@ Configuration.Boolean = ({ fieldKey, name, required }) => {
   );
 };
 
-Configuration.Array = ({ fieldKey, name, description, items }) => {
+Configuration.Array = ({
+  fieldKey,
+  name,
+  description,
+  items,
+  default: defaultValue,
+}) => {
   const [itemState, setItemState] = useState<ConfigurationField[]>([]);
   const { remove } = useContext(ConfigurationContext);
 
@@ -218,6 +226,19 @@ Configuration.Array = ({ fieldKey, name, description, items }) => {
     remove(`${fieldKey}[${itemState.length - 1}]`);
   }
 
+  useEffect(() => {
+    if (defaultValue) {
+      const data = (defaultValue as Array<any>).map((item, idx) => {
+        return {
+          fieldKey: `${fieldKey}[${idx}]`,
+          name: `${idx}`,
+          default: item,
+        } as ConfigurationField;
+      });
+      setItemState(data);
+    }
+  }, []);
+
   return (
     <div className="flex flex-col">
       <div className="flex bg-gray-100 border items-center justify-between px-1">
@@ -234,7 +255,12 @@ Configuration.Array = ({ fieldKey, name, description, items }) => {
         {itemState.map((item, idx) => {
           return (
             <div className="flex items-center space-x-2" key={idx}>
-              {renderInputField(item)}
+              {renderInputField({
+                ...item,
+                default: defaultValue
+                  ? (defaultValue as Array<any>)[idx]
+                  : item.default,
+              } as ConfigurationField)}
               {idx === itemState.length - 1 && (
                 <Button color="ghost" onClick={handleDelete}>
                   <MdDelete className="w-5 h-5" />
@@ -248,7 +274,13 @@ Configuration.Array = ({ fieldKey, name, description, items }) => {
   );
 };
 
-Configuration.Object = ({ fieldKey, name, description, properties }) => {
+Configuration.Object = ({
+  fieldKey,
+  name,
+  description,
+  properties,
+  default: defaultValue,
+}) => {
   return (
     <div className="flex flex-col mb-2">
       <div className="flex bg-gray-100 border items-center justify-between px-1 h-12">
@@ -262,6 +294,9 @@ Configuration.Object = ({ fieldKey, name, description, properties }) => {
             ...value,
             fieldKey: `${fieldKey}.${sKey}`,
             name: sKey,
+            default: defaultValue
+              ? (defaultValue as Record<string, any>)[sKey]
+              : value.default,
           } as ConfigurationField);
         })}
       </div>
