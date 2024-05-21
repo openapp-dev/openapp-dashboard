@@ -1,4 +1,4 @@
-import { Fragment, useRef, ReactElement, useEffect, useState, JSXElementConstructor } from "react";
+import { Fragment, useRef, ReactElement, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Divider } from "react-daisyui";
 import {
@@ -6,9 +6,8 @@ import {
   RocketLaunchIcon,
   BuildingStorefrontIcon,
   CheckIcon,
-  ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import { Menu, Transition, Dialog } from "@headlessui/react";
+import { Menu, Transition } from "@headlessui/react";
 import { publicServiceInstance, publicServiceTemplate, logs } from "../api";
 import { PublicServiceInstance, PublicServiceTemplate } from "../types";
 import Panel from "../component/Panel";
@@ -57,17 +56,16 @@ export default function PublicServiceInstanceDetail() {
         return;
       }
 
-      let logDetail: ReactElement<any, string | JSXElementConstructor<any>>[] = [];
+      let logDetail: ReactElement[] = [];
       const logGet = await logs.getPublicServiceInstanceLogs(instanceName);
       if (logGet.success) {
-        logDetail = (logGet.data ?? "").split("\n").map((line) => (
-          <>
+        logDetail = (logGet.data ?? "").split("\n").map((line, idx) => (
+          <Fragment key={idx}>
             {line}
             <br />
-          </>
+          </Fragment>
         ));
       }
-
       setState({
         ...state,
         instance: instance.data,
@@ -87,7 +85,8 @@ export default function PublicServiceInstanceDetail() {
     if (!name) {
       return;
     }
-    const { success, message } = await publicServiceInstance.deletePublicServiceInstance(name);
+    const { success, message } =
+      await publicServiceInstance.deletePublicServiceInstance(name);
     if (!success) {
       setState({ ...state, error: message });
       return;
@@ -119,6 +118,9 @@ export default function PublicServiceInstanceDetail() {
             OK
           </Button>
         }
+        icon={
+          <CheckIcon className="h-6 w-6 text-blue-600" aria-hidden="true" />
+        }
       />
       <OpenAppDialog
         show={deleteWaringOpen}
@@ -149,6 +151,9 @@ export default function PublicServiceInstanceDetail() {
           >
             No
           </Button>
+        }
+        icon={
+          <CheckIcon className="h-6 w-6 text-blue-600" aria-hidden="true" />
         }
       />
       <div className="flex space-x-1">
@@ -214,7 +219,7 @@ export default function PublicServiceInstanceDetail() {
                             navigate("/instance/publicservice/edit", {
                               state: {
                                 template: state.template,
-                                instanceName: state.instance?.metadata.name,
+                                instance: state.instance,
                               },
                             });
                           }}

@@ -1,10 +1,19 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button, Divider, Input, Select } from "react-daisyui";
-import { ExclamationCircleIcon, InboxStackIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import {
+  ExclamationCircleIcon,
+  InboxStackIcon,
+  QuestionMarkCircleIcon,
+} from "@heroicons/react/24/outline";
 import { parseYaml } from "../util";
 import { appInstance, publicServiceInstance } from "../api";
-import { AppTemplate, InputField, createAppInstanceType } from "../types";
+import {
+  AppInstance,
+  AppTemplate,
+  InputField,
+  createAppInstanceType,
+} from "../types";
 import Panel from "../component/Panel";
 import {
   Configuration,
@@ -18,8 +27,7 @@ interface State {
   publicService: string[];
   dialogOpen: boolean;
   errDialogOpen: boolean;
-  errorMsg: string;
-  edit: boolean;
+  isEdit: boolean;
   loading: boolean;
   error?: string;
 }
@@ -33,18 +41,21 @@ interface ConfigurationForm {
 export default function AppTemplateDetail() {
   const location = useLocation();
   const template: AppTemplate = location.state.template;
-  const instanceName = location.state.instanceName;
+  const instance: AppInstance = location.state.instance;
   if (!template) {
     return <NotFound />;
   }
   const inputs = parseYaml<Record<string, InputField>>(template.spec.inputs);
+  const existsData: Record<string, any> = parseYaml<Record<string, any>>(
+    instance?.spec.inputs ?? ""
+  );
+
   const [state, setState] = useState<State>({
     publicService: [],
     loading: true,
-    edit: instanceName ? true : false,
+    isEdit: instance ? true : false,
     dialogOpen: false,
     errDialogOpen: false,
-    errorMsg: "",
   });
 
   //   fetch public service instance
@@ -61,8 +72,9 @@ export default function AppTemplateDetail() {
     }
     fetchData();
   }, []);
+
   const [form, setForm] = useState<ConfigurationForm>({
-    instanceName: instanceName ?? "",
+    instanceName: instance?.metadata.name ?? "",
     publicService: "No Exposure",
     inputs: null,
   });
@@ -80,13 +92,18 @@ export default function AppTemplateDetail() {
       appInstanceNew
     );
     if (!success) {
-      setState((prev) => ({ ...prev, dialogOpen: false, errDialogOpen: true, errorMsg: message }));
-      return
+      setState((prev) => ({
+        ...prev,
+        dialogOpen: false,
+        errDialogOpen: true,
+        error: message,
+      }));
+      return;
     }
     setState((prev) => ({ ...prev, dialogOpen: false }));
-    if (state.edit) {
+    if (state.isEdit) {
       navigate("/instance/app/detail", {
-        state: { name: instanceName },
+        state: { name: instance.metadata.name },
       });
     } else {
       navigate("/instance/app");
@@ -129,7 +146,7 @@ export default function AppTemplateDetail() {
             setState((prev) => ({ ...prev, errDialogOpen: value }))
           }
           title={"Error"}
-          content={"Error message:" + state.errorMsg + ", please check your input parameters."}
+          content={`Error message:${state.error}, please check your input parameters.`}
           confirm={<></>}
           cancel={
             <Button
@@ -156,9 +173,9 @@ export default function AppTemplateDetail() {
           onClose={(value) =>
             setState((prev) => ({ ...prev, dialogOpen: value }))
           }
-          title={state.edit ? "Update APP" : "Create APP"}
+          title={state.isEdit ? "Update APP" : "Create APP"}
           content={
-            state.edit
+            state.isEdit
               ? `Are you sure to update APP ${form.instanceName}?`
               : "Are you sure to create APP?"
           }
@@ -197,7 +214,7 @@ export default function AppTemplateDetail() {
           </span>
           <span>/</span>
           <span className="font-bold">
-            {state.edit && "edit "}
+            {state.isEdit && "edit "}
             {template.metadata?.name}
           </span>
         </div>
@@ -240,7 +257,7 @@ export default function AppTemplateDetail() {
                 <Input
                   name="instanceName"
                   type="text"
-                  disabled={state.edit}
+                  disabled={state.isEdit}
                   className="sm:w-96 w-full focus:outline-blue-500"
                   placeholder="APP instance name"
                   value={form.instanceName}
@@ -256,9 +273,7 @@ export default function AppTemplateDetail() {
                   value={form.publicService}
                   onChange={handleChange}
                 >
-                  <Select.Option value="No Exposure">
-                    No Exposure
-                  </Select.Option>
+                  <Select.Option value="No Exposure">No Exposure</Select.Option>
                   {state.publicService.map((item, idx) => (
                     <Select.Option key={idx} value={item}>
                       {item}
@@ -266,7 +281,7 @@ export default function AppTemplateDetail() {
                   ))}
                 </Select>
               </div>
-              <Configuration inputs={inputs} />
+              <Configuration inputs={inputs} existsData={existsData} />
             </div>
           </Panel>
           <Panel title="APP details">

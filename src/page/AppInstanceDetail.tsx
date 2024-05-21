@@ -1,4 +1,4 @@
-import { Fragment, useRef, ReactElement, useEffect, useState, JSXElementConstructor } from "react";
+import { Fragment, useRef, ReactElement, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Divider } from "react-daisyui";
 import {
@@ -7,7 +7,6 @@ import {
   BuildingStorefrontIcon,
   GlobeAltIcon,
   ExclamationCircleIcon,
-  CheckBadgeIcon,
   CheckIcon,
 } from "@heroicons/react/24/outline";
 import { MdDelete, MdEdit } from "react-icons/md";
@@ -59,22 +58,22 @@ export default function AppInstanceDetail() {
         setState({ ...state, loading: false, error: template.message });
         return;
       }
-
-      let logDetail: ReactElement<any, string | JSXElementConstructor<any>>[] = [];
       const logGet = await logs.getAPPInstanceLogs(instanceName);
-      if (logGet.success) {
-        logDetail = (logGet.data ?? "").split("\n").map((line) => (
-          <>
-            {line}
-            <br />
-          </>
-        ));
+      if (!logGet.success) {
+        setState({ ...state, error: logGet.message });
+        return;
       }
+      const logDetail = (logGet.data ?? "").split("\n").map((line, idx) => (
+        <Fragment key={idx}>
+          {line}
+          <br />
+        </Fragment>
+      ));
       setState({
         ...state,
+        log: logDetail,
         appInstance: instance.data,
         appTemplate: template.data,
-        log: logDetail,
       });
     }
     fetchData();
@@ -122,10 +121,7 @@ export default function AppInstanceDetail() {
           </Button>
         }
         icon={
-          <CheckIcon
-            className="h-6 w-6 text-blue-600"
-            aria-hidden="true"
-          />
+          <CheckIcon className="h-6 w-6 text-blue-600" aria-hidden="true" />
         }
       />
       <OpenAppDialog
@@ -228,7 +224,7 @@ export default function AppInstanceDetail() {
                             navigate("/instance/app/edit", {
                               state: {
                                 template: state.appTemplate,
-                                instanceName: state.appInstance?.metadata.name,
+                                instance: state.appInstance,
                               },
                             });
                           }}

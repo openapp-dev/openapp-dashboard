@@ -6,7 +6,12 @@ import {
   InboxStackIcon,
   QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
-import { PublicServiceTemplate, InputField, createPublicServiceInstanceType } from "../types";
+import {
+  PublicServiceTemplate,
+  InputField,
+  createPublicServiceInstanceType,
+  PublicServiceInstance,
+} from "../types";
 import { parseYaml } from "../util";
 import Panel from "../component/Panel";
 import TemplateMarkdown from "../component/TemplateMarkdown";
@@ -17,14 +22,12 @@ import {
 import NotFound from "../component/NotFound";
 import { publicServiceInstance } from "../api";
 import { OpenAppDialog } from "../component/OpenAppDialog";
-import Loading from "../component/Loading";
 
 interface State {
   publicService: string[];
   dialogOpen: boolean;
   errDialogOpen: boolean;
-  errorMsg: string;
-  edit: boolean;
+  isEdit: boolean;
   loading: boolean;
   error?: string;
 }
@@ -37,22 +40,24 @@ interface ConfigurationForm {
 export default function PublicServiceTemplateDetail() {
   const location = useLocation();
   const template: PublicServiceTemplate = location.state.template;
-  const instanceName = location.state.instanceName;
+  const instance: PublicServiceInstance = location.state.instance;
   if (!template) {
     return <NotFound />;
   }
   const inputs = parseYaml<Record<string, InputField>>(template.spec.inputs);
+  const existsData = parseYaml<Record<string, any>>(
+    instance?.spec.inputs ?? ""
+  );
   const [state, setState] = useState<State>({
     publicService: [],
     loading: true,
-    edit: instanceName ? true : false,
+    isEdit: instance ? true : false,
     dialogOpen: false,
     errDialogOpen: false,
-    errorMsg: "",
   });
 
   const [form, setForm] = useState<ConfigurationForm>({
-    instanceName: instanceName ?? "",
+    instanceName: instance?.metadata.name ?? "",
     inputs: null,
   });
   const cancelButtonRef = useRef(null);
@@ -64,17 +69,23 @@ export default function PublicServiceTemplateDetail() {
       template.metadata.name ?? "",
       form.inputs
     );
-    const { success, message } = await publicServiceInstance.createOrUpdatePublicServiceInstance(
-      instanceNew
-    );
+    const { success, message } =
+      await publicServiceInstance.createOrUpdatePublicServiceInstance(
+        instanceNew
+      );
     if (!success) {
-      setState((prev) => ({ ...prev, dialogOpen: false, errDialogOpen: true, errorMsg: message }));
-      return
+      setState((prev) => ({
+        ...prev,
+        dialogOpen: false,
+        errDialogOpen: true,
+        errorMsg: message,
+      }));
+      return;
     }
     setState((prev) => ({ ...prev, dialogOpen: false }));
-    if (state.edit) {
+    if (state.isEdit) {
       navigate("/instance/publicservice/detail", {
-        state: { name: instanceName },
+        state: { name: instance.metadata.name },
       });
     } else {
       navigate("/instance/publicservice");
@@ -117,7 +128,7 @@ export default function PublicServiceTemplateDetail() {
             setState((prev) => ({ ...prev, errDialogOpen: value }))
           }
           title={"Error"}
-          content={"Error message:" + state.errorMsg + ", please check your input parameters."}
+          content={`Error message: ${state.error}, please check your input parameters.`}
           confirm={<></>}
           cancel={
             <Button
@@ -144,9 +155,11 @@ export default function PublicServiceTemplateDetail() {
           onClose={(value) =>
             setState((prev) => ({ ...prev, dialogOpen: value }))
           }
-          title={state.edit ? "Update Public Service" : "Create Public Service"}
+          title={
+            state.isEdit ? "Update Public Service" : "Create Public Service"
+          }
           content={
-            state.edit
+            state.isEdit
               ? `Are you sure to update Public Service ${form.instanceName}?`
               : "Are you sure to create Public Service?"
           }
@@ -185,7 +198,7 @@ export default function PublicServiceTemplateDetail() {
           </span>
           <span>/</span>
           <span className="font-bold">
-            {state.edit && "edit "}
+            {state.isEdit && "edit "}
             {template.metadata?.name}
           </span>
         </div>
@@ -229,7 +242,7 @@ export default function PublicServiceTemplateDetail() {
                 <Input
                   name="instanceName"
                   type="text"
-                  disabled={state.edit}
+                  disabled={state.isEdit}
                   className="sm:w-96 w-full focus:outline-blue-500"
                   placeholder="Public Service instance name"
                   value={form.instanceName}
@@ -237,7 +250,7 @@ export default function PublicServiceTemplateDetail() {
                 />
               </div>
 
-              <Configuration inputs={inputs} />
+              <Configuration inputs={inputs} existsData={existsData} />
             </div>
           </Panel>
           <Panel title="Public Service details">
